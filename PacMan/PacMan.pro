@@ -1,5 +1,5 @@
 QT       += core gui
-QT       += network
+QT       += network   #QtNetwork
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -18,9 +18,19 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    main.cpp
+    board.cpp \
+    enemy.cpp \
+    game.cpp \
+    main.cpp \
+    myserver.cpp \
+    player.cpp
 
-HEADERS +=
+HEADERS += \
+    board.h \
+    enemy.h \
+    game.h \
+    myserver.h \
+    player.h
 
 FORMS +=
 
