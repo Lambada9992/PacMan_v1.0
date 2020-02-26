@@ -19,16 +19,20 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     board.cpp \
+    character.cpp \
     enemy.cpp \
     game.cpp \
     main.cpp \
+    myclient.cpp \
     myserver.cpp \
     player.cpp
 
 HEADERS += \
     board.h \
+    character.h \
     enemy.h \
     game.h \
+    myclient.h \
     myserver.h \
     player.h
 

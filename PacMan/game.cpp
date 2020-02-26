@@ -1,8 +1,17 @@
 #include "game.h"
 
-Game::Game()
+Game::Game(QObject *parent) : QObject(parent)
 {
 
+}
 
+Game::~Game()
+{
 
 }
+
+void Game::onTick()
+{
+
+}
+

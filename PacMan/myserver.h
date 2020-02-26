@@ -1,11 +1,15 @@
 #ifndef MYSERVER_H
 #define MYSERVER_H
 
+#include <QTcpServer>
 
-class MyServer
+
+class MyServer : public QTcpServer
 {
+    Q_OBJECT
 public:
-    MyServer();
+    MyServer(QObject *parent = nullptr);
+    void incomingConnection(qintptr socketDescriptor) override;
 };
 
 #endif // MYSERVER_H

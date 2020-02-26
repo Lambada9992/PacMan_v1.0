@@ -1,6 +1,11 @@
 #include "myserver.h"
 
-MyServer::MyServer()
+MyServer::MyServer(QObject * parent) : QTcpServer(parent)
+{
+
+}
+
+void MyServer::incomingConnection(qintptr socketDescriptor)
 {
 
 }
