@@ -38,6 +38,13 @@ void Board::resizePlayground(unsigned int y, unsigned int x)
 
 }
 
+bool Board::isValid(unsigned int y, unsigned int x)
+{
+    if(playground[y][x]!=1){return true;}
+
+    return false;
+}
+
 void Board::setMap(unsigned int index)
 {
     if(index == 1){

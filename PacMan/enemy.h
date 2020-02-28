@@ -5,9 +5,12 @@
 
 class Enemy : public Character
 {
+private:
+    unsigned int state;
 
 public:
     Enemy();
+    virtual void setNextDirection()=0;
 };
 
 #endif // ENEMY_H

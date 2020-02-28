@@ -10,6 +10,10 @@
 #include "player.h"
 #include "enemy.h"
 #include "board.h"
+#include "gui.h"
+//do usuniecia
+#include <iostream>
+#include <iomanip>
 
 
 class Game : public QObject
@@ -20,15 +24,17 @@ private:
     unsigned short mode; //tryby : 1-singleplayer, 2-dołączenie do hosta, 3-zostanie hostem, 4 - spectator
     QTimer *timer;
     Board board;
-    QVector<Player *> players;
+    Player *player;
+    QVector<Player *> onlinePlayers;
     QVector<Enemy *> enemies;
     QList<Player *> spectators;
     QList<Player *> queue;
     MyServer *server;
     QTcpSocket *socket;
+    Gui window;
 
 private:
-    void makeMove();
+    void makeMove(Character *item);
 
 public:
     Game(QObject *parent = nullptr);

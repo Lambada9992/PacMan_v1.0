@@ -2,16 +2,14 @@
 #define PLAYER_H
 
 #include "character.h"
-#include "myclient.h"
 
 
 class Player : public Character
 {
-    unsigned int lifes;
+    unsigned int life;
     unsigned int score;
+    bool isAlive;
 
-    qintptr socketDescriptor;
-    MyClient *client;
 
 
 public:

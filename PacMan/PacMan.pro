@@ -4,7 +4,7 @@ QT       += network   #QtNetwork
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
-CONFIG += console  #konsola
+#CONFIG += console  #konsola
 
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
@@ -22,9 +22,13 @@ SOURCES += \
     character.cpp \
     enemy.cpp \
     game.cpp \
+    gui.cpp \
     main.cpp \
+    myboardrectitem.cpp \
+    mybutton.cpp \
     myclient.cpp \
     myserver.cpp \
+    onlineplayer.cpp \
     player.cpp
 
 HEADERS += \
@@ -32,8 +36,12 @@ HEADERS += \
     character.h \
     enemy.h \
     game.h \
+    gui.h \
+    myboardrectitem.h \
+    mybutton.h \
     myclient.h \
     myserver.h \
+    onlineplayer.h \
     player.h
 
 FORMS +=

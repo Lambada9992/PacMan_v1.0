@@ -26,11 +26,17 @@ private:
     void clearPlayground();
     void resizePlayground(unsigned int y,unsigned int x);
 public:
+    bool isValid(unsigned int y,unsigned int x);
+
+
+    //getery i setery
     unsigned int getPlaygroundIndex(){return this->playgroundIndex;}
-    void getSpawnPoint(unsigned int &y,unsigned int &x,qintptr socketDescriptor);
+    unsigned int getplaygroundSizeY(){return this->getplaygroundSizeY();}
+    unsigned int getplaygroundSizeX(){return this->getplaygroundSizeX();}
+    QVector<QVector<unsigned int>> getPlayground(){return this->playground;}
+
     void setMap(unsigned int index);
-    unsigned int atIndex(unsigned int y,unsigned int x);
-    unsigned int collect(unsigned int y,unsigned int x);
+
 
 };
 
