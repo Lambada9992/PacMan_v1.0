@@ -1,4 +1,5 @@
 QT       += core gui
+QT       += network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -16,11 +17,22 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    main.cpp \
-    widget.cpp
+    GAME/board.cpp \
+    GAME/game.cpp \
+    GUI/ITEM/gui_board.cpp \
+    GUI/ITEM/mybutton.cpp \
+    GUI/ITEM/myobstacle.cpp \
+    GUI/gui_view.cpp \
+    main.cpp
 
-HEADERS += \
-    widget.h
+HEADERS += \ \
+    GAME/board.h \
+    GAME/game.h \
+    GUI/ITEM/gui_board.h \
+    GUI/ITEM/mybutton.h \
+    GUI/ITEM/myobstacle.h \
+    GUI/gui_view.h \
+    game.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
