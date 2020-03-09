@@ -3,7 +3,8 @@
 
 #include <QGraphicsRectItem>
 #include <QObject>
-#include "GAME/board.h"
+#include <QPointF>
+#include "GAME/game.h"
 
 
 
@@ -12,11 +13,12 @@ class Gui_Board : public QObject, public QGraphicsRectItem
     Q_OBJECT
     //var
 private:
+    QPointF position;
     QVector<QVector<QGraphicsRectItem *>> obsctacleMap;
     unsigned int scale;
 
 public:
-    explicit Gui_Board(int y,int x,unsigned int sizeY,unsigned int sizeX,unsigned int scale,QVector<QVector<unsigned int>> map, QGraphicsItem *parent = nullptr);
+    explicit Gui_Board(int x,int y,unsigned int scale,Game &game, QGraphicsItem *parent = nullptr);
 };
 
 #endif // GUI_BOARD_H

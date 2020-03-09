@@ -29,6 +29,7 @@ private:
 public:
     unsigned int getMapSizeY(){return mapSizeY;}
     unsigned int getMapSizeX(){return mapSizeX;}
+    unsigned int getObstacleMap(unsigned int i,unsigned int j){return map[i][j];}
 
 };
 

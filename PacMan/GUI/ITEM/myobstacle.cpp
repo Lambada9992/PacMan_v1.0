@@ -3,11 +3,16 @@
 #include <QDebug>
 
 
-MyObstacle::MyObstacle(unsigned int x,unsigned int y,unsigned int scale,QGraphicsItem *parent) : QGraphicsRectItem(parent)
+MyObstacle::MyObstacle(unsigned int x,unsigned int y,QVector<int> neighbours,unsigned int scale,QPointF boardPosition,QGraphicsItem *parent) : QGraphicsRectItem(parent)
 {
-    setRect((x*scale)+25,(y*scale)+25,scale,scale);
+
+    double extraSpace = 4;
+
+
+    setRect((x*scale)+boardPosition.x()+(neighbours[3]*scale/extraSpace),(y*scale)+boardPosition.y()+(neighbours[0]*scale/extraSpace),scale-((neighbours[1]+neighbours[3])*scale/extraSpace),scale-((neighbours[0]+neighbours[2])*scale/extraSpace));
     QBrush brush;
-    brush.setColor(Qt::white);
+
+    brush.setColor(Qt::blue);
     brush.setStyle(Qt::SolidPattern);
     setBrush(brush);
 

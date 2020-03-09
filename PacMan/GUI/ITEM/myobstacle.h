@@ -6,7 +6,7 @@
 class MyObstacle : public QGraphicsRectItem
 {
 public:
-    MyObstacle(unsigned int x,unsigned int y,unsigned int scale,QGraphicsItem *parent = nullptr);
+    MyObstacle(unsigned int x,unsigned int y,QVector<int> neighbours,unsigned int scale,QPointF boardPosition,QGraphicsItem *parent = nullptr);
 };
 
 #endif // MYOBSTACLE_H

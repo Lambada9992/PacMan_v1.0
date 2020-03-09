@@ -5,6 +5,9 @@
 #include "GUI/ITEM/mybutton.h"
 #include "GUI/ITEM/gui_board.h"
 
+#include <QKeyEvent>
+#include <QDebug>
+
 GUI_View::GUI_View(QWidget *parent) : QGraphicsView(parent)
 {
     //window size and scrollbars
@@ -14,7 +17,7 @@ GUI_View::GUI_View(QWidget *parent) : QGraphicsView(parent)
 
     //creating scene
     scene = new QGraphicsScene(this);
-    scene->setSceneRect(0,0,1024,800);
+    scene->setSceneRect(0,0,1024,900);
     setScene(scene);
 
     //bg color
@@ -82,10 +85,10 @@ void GUI_View::displayGame()
     //clearing
     if(scene == nullptr)return;
 
-    this->setBackgroundBrush(QBrush(Qt::darkBlue,Qt::SolidPattern));
     scene->clear();
+    this->setBackgroundBrush(QBrush(Qt::white,Qt::SolidPattern));
 
-    Gui_Board *board = new Gui_Board(25,25,game.playground.getMapSizeY(),game.playground.getMapSizeX(),25,game.playground.getMap());
+    Gui_Board *board = new Gui_Board(50,50,25,this->game);
     scene->addItem(board);
 }
 
@@ -98,4 +101,22 @@ void GUI_View::singleplayerButtonClicked()
 void GUI_View::quitButtonClicked()
 {
     exit(0);
+}
+
+void GUI_View::keyPressEvent(QKeyEvent *event)
+{
+    switch(event->key()){
+    case Qt::Key_Up:
+
+        break;
+    case Qt::Key_Right:
+
+        break;
+    case Qt::Key_Left:
+
+        break;
+    case Qt::Key_Down:
+
+        break;
+    }
 }

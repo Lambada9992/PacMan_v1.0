@@ -19,15 +19,20 @@ public:
     //konstruktor
     explicit GUI_View(QWidget *parent = nullptr);
 
-    //metody wyświetlania
+    //display methods
     void displayMainMenu();
     void displayGame();
 
-    //buttons slots
+
 public slots:
+    //buttons slots
     void singleplayerButtonClicked();
     //void multiplayerButtonClicked();
     void quitButtonClicked();
+
+public:
+    //keyboard
+    void keyPressEvent(QKeyEvent *event);
 
 };
 
