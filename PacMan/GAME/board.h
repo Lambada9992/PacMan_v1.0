@@ -2,34 +2,37 @@
 #define BOARD_H
 
 #include <QVector>
-
+#include <QPoint>
 
 class Board
 {
-    //var
-    QVector<QVector<unsigned int>> map;
+    friend class Game;
+
+    //VAR
+private:
     unsigned int mapSizeX,mapSizeY;
-    QVector<QVector<unsigned int>> bonusMap;
-public:
-    //konstruktor i destruktor
+    QVector<QVector<unsigned int>> obstacleMap;
+    QVector<QVector<unsigned int>> bonusMap; //not implemented yet
+    QVector<QPoint> spawnPoints; //not implemented yet
+
+
+
+    //METHODS
+public://public methods
     Board();
 
-    //public methods
+    QVector<QVector<unsigned int>> getMap(){return this->obstacleMap;}
+
+private://private methods
     void setMap(unsigned int index);
-    QVector<QVector<unsigned int>> getMap(){return this->map;}
-
-
-
-private:
-    //private methods
     void clearMap();
     void resizeMap(unsigned int y,unsigned int x);
 
-    //chwilowe
-public:
+public://getery i setery
     unsigned int getMapSizeY(){return mapSizeY;}
     unsigned int getMapSizeX(){return mapSizeX;}
-    unsigned int getObstacleMap(unsigned int i,unsigned int j){return map[i][j];}
+    unsigned int getObstacleMap(unsigned int i,unsigned int j){return obstacleMap[i][j];}
+    QPoint getSpawnPoint(unsigned int index);
 
 };
 

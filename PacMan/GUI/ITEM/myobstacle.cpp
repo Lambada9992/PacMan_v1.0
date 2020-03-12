@@ -10,8 +10,8 @@ MyObstacle::MyObstacle(unsigned int x,unsigned int y,QVector<int> neighbours,uns
 
 
     setRect((x*scale)+boardPosition.x()+(neighbours[3]*scale/extraSpace),(y*scale)+boardPosition.y()+(neighbours[0]*scale/extraSpace),scale-((neighbours[1]+neighbours[3])*scale/extraSpace),scale-((neighbours[0]+neighbours[2])*scale/extraSpace));
-    QBrush brush;
 
+    QBrush brush;
     brush.setColor(Qt::blue);
     brush.setStyle(Qt::SolidPattern);
     setBrush(brush);

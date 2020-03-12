@@ -5,6 +5,7 @@
 #include <QObject>
 #include <QPointF>
 #include "GAME/game.h"
+#include "GUI/ITEM/gui_character.h"
 
 
 
@@ -15,6 +16,7 @@ class Gui_Board : public QObject, public QGraphicsRectItem
 private:
     QPointF position;
     QVector<QVector<QGraphicsRectItem *>> obsctacleMap;
+    QVector<QVector<Gui_Character *>> players;
     unsigned int scale;
 
 public:

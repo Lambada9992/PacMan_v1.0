@@ -28,17 +28,24 @@ GUI_View::GUI_View(QWidget *parent) : QGraphicsView(parent)
 
 }
 
+GUI_View::~GUI_View()
+{
+    delete scene;
+}
+
 void GUI_View::displayMainMenu()
 {
-    //clearing
     if(scene == nullptr)return;
 
-    this->setBackgroundBrush(QBrush(Qt::darkGray,Qt::SolidPattern));
+    //clearing
     scene->clear();
+
+    //bg patern and color
+    this->setBackgroundBrush(QBrush(Qt::darkGray,Qt::SolidPattern));
 
     //title "PACMAN"
     QGraphicsTextItem *title = new QGraphicsTextItem(QString("PacMan"));
-    QFont titleFont("comic sans",50);
+    QFont titleFont("comic sans",50,QFont::Bold);
     title->setFont(titleFont);
     int x = this->width()/2 - title->boundingRect().width()/2;
     int y = 100;
@@ -82,10 +89,11 @@ void GUI_View::displayMainMenu()
 
 void GUI_View::displayGame()
 {
-    //clearing
     if(scene == nullptr)return;
 
+    //clearing
     scene->clear();
+
     this->setBackgroundBrush(QBrush(Qt::white,Qt::SolidPattern));
 
     Gui_Board *board = new Gui_Board(50,50,25,this->game);
@@ -107,16 +115,16 @@ void GUI_View::keyPressEvent(QKeyEvent *event)
 {
     switch(event->key()){
     case Qt::Key_Up:
-
+        game.myPlayerControl(1);
         break;
     case Qt::Key_Right:
-
+        game.myPlayerControl(2);
         break;
     case Qt::Key_Left:
-
+        game.myPlayerControl(3);
         break;
     case Qt::Key_Down:
-
+        game.myPlayerControl(4);
         break;
     }
 }

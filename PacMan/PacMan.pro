@@ -17,18 +17,26 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    GAME/CHARACTER/gamecharacter.cpp \
+    GAME/CHARACTER/myplayer.cpp \
+    GAME/CHARACTER/player.cpp \
     GAME/board.cpp \
     GAME/game.cpp \
     GUI/ITEM/gui_board.cpp \
+    GUI/ITEM/gui_character.cpp \
     GUI/ITEM/mybutton.cpp \
     GUI/ITEM/myobstacle.cpp \
     GUI/gui_view.cpp \
     main.cpp
 
 HEADERS += \ \
+    GAME/CHARACTER/gamecharacter.h \
+    GAME/CHARACTER/myplayer.h \
+    GAME/CHARACTER/player.h \
     GAME/board.h \
     GAME/game.h \
     GUI/ITEM/gui_board.h \
+    GUI/ITEM/gui_character.h \
     GUI/ITEM/mybutton.h \
     GUI/ITEM/myobstacle.h \
     GUI/gui_view.h \
@@ -38,3 +46,6 @@ HEADERS += \ \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    res.qrc

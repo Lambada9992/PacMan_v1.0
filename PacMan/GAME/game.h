@@ -1,15 +1,40 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include <QTimer>
 #include "GAME/board.h"
+#include "GAME/CHARACTER/myplayer.h"
+#include <QObject>
 
-
-class Game
+class Game : QObject
 {
-
+    Q_OBJECT
+    //VAR
 public:
-    Game();
     Board playground;
+private:
+    QTimer *timer;
+    QVector<Player *> players;
+    bool isLive;
+
+
+
+    //METHODS
+public://public methods
+    Game();
+    ~Game();
+
+    void myPlayerControl(int direction);
+    void start();
+    void stop();
+    void makeMoves();
+
+public slots:
+    void onTick();
+
+signals:
+    void update();
+
 };
 
 #endif // GAME_H

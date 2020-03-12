@@ -10,19 +10,24 @@ class GUI_View : public QGraphicsView
 {
     Q_OBJECT
 
-    //var
+    //VAR
 private:
     QGraphicsScene *scene;
     Game game;
 
-public:
-    //konstruktor
+
+
+    //METHODS
+public://public methods
     explicit GUI_View(QWidget *parent = nullptr);
+    ~GUI_View();
 
     //display methods
     void displayMainMenu();
     void displayGame();
 
+    //keyboard
+    void keyPressEvent(QKeyEvent *event);
 
 public slots:
     //buttons slots
@@ -30,9 +35,8 @@ public slots:
     //void multiplayerButtonClicked();
     void quitButtonClicked();
 
-public:
-    //keyboard
-    void keyPressEvent(QKeyEvent *event);
+signals:
+    void directionFromKey(int);
 
 };
 
