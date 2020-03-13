@@ -16,11 +16,23 @@ class Gui_Board : public QObject, public QGraphicsRectItem
 private:
     QPointF position;
     QVector<QVector<QGraphicsRectItem *>> obsctacleMap;
-    QVector<QVector<Gui_Character *>> players;
+    QVector<Gui_Character *> playersAndGhosts;
     unsigned int scale;
+    QVector<QVector<QVector<QPixmap>>> images;
 
+
+    //METHODS
 public:
     explicit Gui_Board(int x,int y,unsigned int scale,Game &game, QGraphicsItem *parent = nullptr);
+    ~Gui_Board();
+
+private:
+    void initObstacle(Game &game);
+    void initPlayers(Game &game);
+    void loadImages();
+public slots:
+    void updateCharacters();
+
 };
 
 #endif // GUI_BOARD_H

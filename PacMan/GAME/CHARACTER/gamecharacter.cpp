@@ -1,11 +1,12 @@
 #include "gamecharacter.h"
+#include <QDebug>
 
 GameCharacter::GameCharacter(Board *map)
 {
     //var init
     this->position.setX(0);
     this->position.setY(0);
-    this->direction = 0;
+
     this->nextDirection = 0;
     this->isAlive = true;
     this->map = map;
@@ -48,6 +49,7 @@ bool GameCharacter::setPosition(unsigned int y, unsigned int x)
 
 bool GameCharacter::setPosition(QPoint position)
 {
+
     if(map->getMapSizeX()-1 < position.rx() || map->getMapSizeY()-1 < position.ry())return false;
     this->isPositioned = true;
     this->position.setX(position.rx());
@@ -57,7 +59,7 @@ bool GameCharacter::setPosition(QPoint position)
 
 void GameCharacter::move()
 {
-    if(this->isPositioned)return;
+    if(!this->isPositioned)return;
 
     switch (this->nextDirection) {
     case 0:
@@ -67,6 +69,13 @@ void GameCharacter::move()
             if(map->getObstacleMap(position.ry()-1,position.rx())!=1){
                 this->direction = this->nextDirection;
                 this->setPosition(position.ry()-1,position.rx());
+                this->nextDirection = 0;
+                return;
+            }
+        }else{
+            if(map->getObstacleMap(map->getMapSizeY()-1,position.rx())!=1){
+                this->direction = this->nextDirection;
+                this->setPosition(map->getMapSizeY()-1,position.rx());
                 this->nextDirection = 0;
                 return;
             }
@@ -80,6 +89,13 @@ void GameCharacter::move()
                 this->nextDirection = 0;
                 return;
             }
+        }else{
+            if(map->getObstacleMap(position.ry(),0)!=1){
+                this->direction = this->nextDirection;
+                this->setPosition(position.ry(),0);
+                this->nextDirection = 0;
+                return;
+            }
         }
         break;
     case 3:
@@ -90,6 +106,13 @@ void GameCharacter::move()
                 this->nextDirection = 0;
                 return;
             }
+        }else{
+            if(map->getObstacleMap(0,position.rx())!=1){
+                this->direction = this->nextDirection;
+                this->setPosition(0,position.rx());
+                this->nextDirection = 0;
+                return;
+            }
         }
         break;
     case 4:
@@ -97,6 +120,13 @@ void GameCharacter::move()
             if(map->getObstacleMap(position.ry(),position.rx()-1)!=1){
                 this->direction = this->nextDirection;
                 this->setPosition(position.ry(),position.rx()-1);
+                this->nextDirection = 0;
+                return;
+            }
+        }else{
+            if(map->getObstacleMap(position.ry(),map->getMapSizeX()-1)!=1){
+                this->direction = this->nextDirection;
+                this->setPosition(position.ry(),map->getMapSizeX()-1);
                 this->nextDirection = 0;
                 return;
             }
@@ -113,8 +143,18 @@ void GameCharacter::move()
                 this->setPosition(position.ry()-1,position.rx());
                 return;
             }else{
-                this->direction = 0;
+
+                return;
             }
+        }else{
+            if(map->getObstacleMap(map->getMapSizeY()-1,position.rx())!=1){
+                this->setPosition(map->getMapSizeY()-1,position.rx());
+                return;
+            }else{
+
+                return;
+            }
+
         }
         break;
     case 2:
@@ -123,8 +163,18 @@ void GameCharacter::move()
                 this->setPosition(position.ry(),position.rx()+1);
                 return;
             }else{
-                this->direction = 0;
+
+                return;
             }
+        }else{
+            if(map->getObstacleMap(position.ry(),0)!=1){
+                this->setPosition(position.ry(),0);
+                return;
+            }else{
+
+                return;
+            }
+
         }
         break;
     case 3:
@@ -133,7 +183,16 @@ void GameCharacter::move()
                 this->setPosition(position.ry()+1,position.rx());
                 return;
             }else{
-                this->direction = 0;
+
+                return;
+            }
+        }else{
+            if(map->getObstacleMap(0,position.rx())!=1){
+                this->setPosition(0,position.rx());
+                return;
+            }else{
+
+                return;
             }
         }
         break;
@@ -143,10 +202,25 @@ void GameCharacter::move()
                 this->setPosition(position.ry(),position.rx()-1);
                 return;
             }else{
-                this->direction = 0;
+
+                return;
+            }
+        }else{
+            if(map->getObstacleMap(position.ry(),map->getMapSizeX()-1)!=1){
+                this->setPosition(position.ry(),map->getMapSizeX()-1);
+                return;
+            }else{
+
+                return;
             }
         }
         break;
     }
 
+
+}
+
+QPoint GameCharacter::getPosition()
+{
+ return position;
 }

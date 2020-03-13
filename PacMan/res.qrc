@@ -1,3 +1,20 @@
 <RCC>
-    <qresource prefix="/images"/>
+    <qresource prefix="/images">
+        <file>images/pacclose.png</file>
+        <file>images/pacclosed.png</file>
+        <file>images/pacclosel.png</file>
+        <file>images/paccloseu.png</file>
+        <file>images/pacopen1.png</file>
+        <file>images/pacopen1d.png</file>
+        <file>images/pacopen1l.png</file>
+        <file>images/pacopen1u.png</file>
+        <file>images/pacopen2.png</file>
+        <file>images/pacopen2d.png</file>
+        <file>images/pacopen2l.png</file>
+        <file>images/pacopen2u.png</file>
+        <file>images/pacopen3.png</file>
+        <file>images/pacopen3d.png</file>
+        <file>images/pacopen3l.png</file>
+        <file>images/pacopen3u.png</file>
+    </qresource>
 </RCC>

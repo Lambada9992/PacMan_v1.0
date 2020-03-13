@@ -3,13 +3,15 @@
 #include <QGraphicsSimpleTextItem>
 
 #include "GUI/ITEM/mybutton.h"
-#include "GUI/ITEM/gui_board.h"
+
 
 #include <QKeyEvent>
 #include <QDebug>
 
+
 GUI_View::GUI_View(QWidget *parent) : QGraphicsView(parent)
 {
+
     //window size and scrollbars
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -20,16 +22,18 @@ GUI_View::GUI_View(QWidget *parent) : QGraphicsView(parent)
     scene->setSceneRect(0,0,1024,900);
     setScene(scene);
 
-    //bg color
-    // this->setBackgroundBrush(QBrush(Qt::darkGray,Qt::SolidPattern));
 
     //display mainmenu
     this->displayMainMenu();
+
+    connect(&this->game,SIGNAL(update()),this,SLOT(updateGui()));
+
 
 }
 
 GUI_View::~GUI_View()
 {
+
     delete scene;
 }
 
@@ -96,8 +100,12 @@ void GUI_View::displayGame()
 
     this->setBackgroundBrush(QBrush(Qt::white,Qt::SolidPattern));
 
-    Gui_Board *board = new Gui_Board(50,50,25,this->game);
+    board = new Gui_Board(50,50,25,this->game);
+    connect(this,SIGNAL(updateCharacters()),board,SLOT(updateCharacters()));
     scene->addItem(board);
+
+    //game start
+    game.start();
 }
 
 void GUI_View::singleplayerButtonClicked()
@@ -111,6 +119,12 @@ void GUI_View::quitButtonClicked()
     exit(0);
 }
 
+void GUI_View::updateGui()
+{
+    emit updateCharacters();
+
+}
+
 void GUI_View::keyPressEvent(QKeyEvent *event)
 {
     switch(event->key()){
@@ -120,10 +134,10 @@ void GUI_View::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Right:
         game.myPlayerControl(2);
         break;
-    case Qt::Key_Left:
+    case Qt::Key_Down:
         game.myPlayerControl(3);
         break;
-    case Qt::Key_Down:
+    case Qt::Key_Left:
         game.myPlayerControl(4);
         break;
     }

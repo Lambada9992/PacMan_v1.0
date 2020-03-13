@@ -25,6 +25,9 @@ public:
     bool setPosition(unsigned int y,unsigned int x);
     bool setPosition(QPoint position);
     void move();
+    virtual int imageState()=0;
+
+    QPoint getPosition();
 
 };
 

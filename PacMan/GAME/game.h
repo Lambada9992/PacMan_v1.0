@@ -6,7 +6,7 @@
 #include "GAME/CHARACTER/myplayer.h"
 #include <QObject>
 
-class Game : QObject
+class Game : public QObject
 {
     Q_OBJECT
     //VAR
@@ -28,10 +28,12 @@ public://public methods
     void start();
     void stop();
     void makeMoves();
+    GameCharacter *character(unsigned int index);
+    unsigned int amountOfChracters();// update when add ghosts
+    int getTimerInterval();
 
 public slots:
     void onTick();
-
 signals:
     void update();
 

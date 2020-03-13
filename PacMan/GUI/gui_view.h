@@ -2,7 +2,7 @@
 #define GUI_VIEW_H
 
 #include <QGraphicsView>
-
+#include "GUI/ITEM/gui_board.h"
 #include "GAME/game.h"
 
 
@@ -14,6 +14,8 @@ class GUI_View : public QGraphicsView
 private:
     QGraphicsScene *scene;
     Game game;
+    Gui_Board *board;
+
 
 
 
@@ -21,6 +23,7 @@ private:
 public://public methods
     explicit GUI_View(QWidget *parent = nullptr);
     ~GUI_View();
+
 
     //display methods
     void displayMainMenu();
@@ -35,8 +38,11 @@ public slots:
     //void multiplayerButtonClicked();
     void quitButtonClicked();
 
+    void updateGui();
+
 signals:
     void directionFromKey(int);
+    void updateCharacters();
 
 };
 

@@ -32,6 +32,7 @@ public://getery i setery
     unsigned int getMapSizeY(){return mapSizeY;}
     unsigned int getMapSizeX(){return mapSizeX;}
     unsigned int getObstacleMap(unsigned int i,unsigned int j){return obstacleMap[i][j];}
+    unsigned int getBonusMap(unsigned int i,unsigned int j){return bonusMap[i][j];}
     QPoint getSpawnPoint(unsigned int index);
 
 };

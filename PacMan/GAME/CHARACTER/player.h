@@ -14,6 +14,7 @@ protected:
     //METHODS
 public:
     Player(Board *map);
+    int imageState() override;
 };
 
 #endif // PLAYER_H
