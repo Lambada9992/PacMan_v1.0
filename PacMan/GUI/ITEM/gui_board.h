@@ -6,6 +6,7 @@
 #include <QPointF>
 #include "GAME/game.h"
 #include "GUI/ITEM/gui_character.h"
+#include "GUI/ITEM/mybonus.h"
 
 
 
@@ -16,6 +17,7 @@ class Gui_Board : public QObject, public QGraphicsRectItem
 private:
     QPointF position;
     QVector<QVector<QGraphicsRectItem *>> obsctacleMap;
+    QVector<QVector<QGraphicsEllipseItem *>> bonusMap;
     QVector<Gui_Character *> playersAndGhosts;
     unsigned int scale;
     QVector<QVector<QVector<QPixmap>>> images;
@@ -28,7 +30,8 @@ public:
 
 private:
     void initObstacle(Game &game);
-    void initPlayers(Game &game);
+    void initBonus(Game &game);
+    void initPlayers(Game &game);    
     void loadImages();
 public slots:
     void updateCharacters();

@@ -1,19 +1,25 @@
 #include "myobstacle.h"
 #include <QBrush>
 #include <QDebug>
+#include <QPen>
 
 
 MyObstacle::MyObstacle(unsigned int x,unsigned int y,QVector<int> neighbours,unsigned int scale,QPointF boardPosition,QGraphicsItem *parent) : QGraphicsRectItem(parent)
 {
 
     double extraSpace = 4;
-
-
-    setRect((x*scale)+boardPosition.x()+(neighbours[3]*scale/extraSpace),(y*scale)+boardPosition.y()+(neighbours[0]*scale/extraSpace),scale-((neighbours[1]+neighbours[3])*scale/extraSpace),scale-((neighbours[0]+neighbours[2])*scale/extraSpace));
+    setPen(Qt::NoPen);
+//    QPen pen;
+//    pen.setWidth(5);
+//    pen.setColor(Qt::green);
+//    setPen(pen);
 
     QBrush brush;
     brush.setColor(Qt::blue);
     brush.setStyle(Qt::SolidPattern);
     setBrush(brush);
+
+    setRect((x*scale)+boardPosition.x()+(neighbours[3]*scale/extraSpace),(y*scale)+boardPosition.y()+(neighbours[0]*scale/extraSpace),scale-((neighbours[1]+neighbours[3])*scale/extraSpace),scale-((neighbours[0]+neighbours[2])*scale/extraSpace));
+
 
 }

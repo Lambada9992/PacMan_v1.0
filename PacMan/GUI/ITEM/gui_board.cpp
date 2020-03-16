@@ -2,6 +2,8 @@
 #include <QBrush>
 #include "GUI/ITEM/myobstacle.h"
 #include <QDebug>
+#include <QPainter>
+#include <QGraphicsEllipseItem>
 
 
 Gui_Board::Gui_Board(int x, int y, unsigned int scale,Game &game, QGraphicsItem *parent) : QGraphicsRectItem(parent)
@@ -21,10 +23,10 @@ Gui_Board::Gui_Board(int x, int y, unsigned int scale,Game &game, QGraphicsItem 
 
 
     initObstacle(game);
+    initBonus(game);
     loadImages();
     initPlayers(game);
 
-    //new Gui_Character(game.character(0),QPixmap(":/images/images/pacopen.png"),this->scale+5,this->position,this);
 
 }
 
@@ -91,6 +93,35 @@ void Gui_Board::initObstacle(Game &game)
     }
 
 }
+
+void Gui_Board::initBonus(Game &game)
+{
+    //Vector resize
+    this->bonusMap.resize(game.playground.getMapSizeY());
+    for(unsigned int i = 0; i < game.playground.getMapSizeY();i++){
+        this->bonusMap[i].resize(game.playground.getMapSizeX());
+    }
+    //filling vector(creating objects)
+    for(int i = 0;i<game.playground.getMapSizeY();i++){
+        for(int j = 0;j<game.playground.getMapSizeX();j++){
+            switch(game.playground.getBonusMap(i,j)){
+            case 1:
+                this->bonusMap[i][j] = new MyBonus(j,i,false,this->scale,this->position,this);
+                break;
+            case 2:
+                this->bonusMap[i][j] = new MyBonus(j,i,true,this->scale,this->position,this);
+                break;
+            default:
+                this->bonusMap[i][j] = nullptr;
+                break;
+
+            }
+        }
+    }
+
+}
+
+
 
 void Gui_Board::initPlayers(Game &game)
 {

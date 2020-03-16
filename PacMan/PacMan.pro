@@ -24,6 +24,7 @@ SOURCES += \
     GAME/game.cpp \
     GUI/ITEM/gui_board.cpp \
     GUI/ITEM/gui_character.cpp \
+    GUI/ITEM/mybonus.cpp \
     GUI/ITEM/mybutton.cpp \
     GUI/ITEM/myobstacle.cpp \
     GUI/gui_view.cpp \
@@ -37,6 +38,7 @@ HEADERS += \ \
     GAME/game.h \
     GUI/ITEM/gui_board.h \
     GUI/ITEM/gui_character.h \
+    GUI/ITEM/mybonus.h \
     GUI/ITEM/mybutton.h \
     GUI/ITEM/myobstacle.h \
     GUI/gui_view.h \
