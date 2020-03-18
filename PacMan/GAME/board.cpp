@@ -1,5 +1,6 @@
 #include "board.h"
 
+
 Board::Board()
 {
     //var init
@@ -84,11 +85,22 @@ void Board::setMap(unsigned int index)
             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
         };
 
+
         this->spawnPoints = {QPoint(1,1),QPoint(getMapSizeX()-2,1),QPoint(1,getMapSizeY()-2),QPoint(getMapSizeX()-2,getMapSizeY()-2),QPoint(0,0)};//SPAWN DUCHOW DO POPRAWY
         break;
     default:
         this->setMap(1);
         break;
+    }
+
+    //bonus amount
+    this->bonusLeft = 0;
+    for(int i = 0;i<this->mapSizeY;i++){
+        for(int j=0;j<this->mapSizeX;j++){
+            if(this->bonusMap[i][j]!=0){
+                this->bonusLeft++;
+            }
+        }
     }
 }
 
@@ -134,8 +146,27 @@ void Board::resizeMap(unsigned int y,unsigned int x)
 
 }
 
+unsigned int Board::collectBonus(unsigned int i, unsigned int j)
+{
+    unsigned int result = this->bonusMap[i][j];
+    if(this->bonusMap[i][j]!=0)this->bonusLeft--;
+    this->bonusMap[i][j] = 0;
+
+    return result;
+}
+
 QPoint Board::getSpawnPoint(unsigned int index)
 {
     return spawnPoints[index];
+
+}
+
+bool Board::ended()
+{
+    if(this->bonusLeft == 0){
+        return true;
+    }else{
+        return false;
+    }
 
 }

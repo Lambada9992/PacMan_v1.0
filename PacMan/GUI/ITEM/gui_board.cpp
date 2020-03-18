@@ -170,6 +170,15 @@ void Gui_Board::loadImages()
 void Gui_Board::updateCharacters()
 {
     for(int i = 0;i< this->playersAndGhosts.size();i++){
-        if(playersAndGhosts[i]!= nullptr)playersAndGhosts[i]->updatePosition();
+        if(playersAndGhosts[i]!= nullptr){
+            playersAndGhosts[i]->updatePosition();
+            if(this->bonusMap[playersAndGhosts[i]->getCharacterPosition().ry()][playersAndGhosts[i]->getCharacterPosition().rx()]!= nullptr){
+                delete this->bonusMap[playersAndGhosts[i]->getCharacterPosition().ry()][playersAndGhosts[i]->getCharacterPosition().rx()];
+                this->bonusMap[playersAndGhosts[i]->getCharacterPosition().ry()][playersAndGhosts[i]->getCharacterPosition().rx()]=nullptr;
+            }
+
+        }
+
+
     }
 }

@@ -57,7 +57,10 @@ void Game::stop()
 void Game::makeMoves()
 {
     for(int i =0;i<players.size();i++){
-        if(players[i]!=nullptr){players[i]->move();}
+        if(players[i]!=nullptr){
+            players[i]->move();
+            players[i]->collectBonuses();
+        }
     }
 }
 
@@ -82,6 +85,7 @@ void Game::onTick()
 {
 
     makeMoves();
+    if(playground.ended())this->stop();
     emit update();
 
 }

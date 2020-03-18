@@ -12,7 +12,8 @@ class Board
 private:
     unsigned int mapSizeX,mapSizeY;
     QVector<QVector<unsigned int>> obstacleMap;
-    QVector<QVector<unsigned int>> bonusMap; //not implemented yet
+    QVector<QVector<unsigned int>> bonusMap;
+    unsigned int bonusLeft;
     QVector<QPoint> spawnPoints; //not implemented yet
 
 
@@ -33,7 +34,9 @@ public://getery i setery
     unsigned int getMapSizeX(){return mapSizeX;}
     unsigned int getObstacleMap(unsigned int i,unsigned int j){return obstacleMap[i][j];}
     unsigned int getBonusMap(unsigned int i,unsigned int j){return bonusMap[i][j];}
+    unsigned int collectBonus(unsigned int i,unsigned int j);
     QPoint getSpawnPoint(unsigned int index);
+    bool ended();
 
 };
 

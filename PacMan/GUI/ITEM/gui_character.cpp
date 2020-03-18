@@ -52,6 +52,11 @@ void Gui_Character::updatePosition()
     animation->start();
 }
 
+QPoint Gui_Character::getCharacterPosition()
+{
+    return this->character->getPosition();
+}
+
 void Gui_Character::onTick()
 {
     if(!isMoving)return;

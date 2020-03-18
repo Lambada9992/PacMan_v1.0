@@ -2,6 +2,9 @@
 
 Player::Player(Board *map) : GameCharacter(map)
 {
+    this->life = 3;
+    this->score = 0;
+
 
 }
 
@@ -22,6 +25,18 @@ int Player::imageState()
         break;
     default:
         return 1;
+        break;
+    }
+}
+
+void Player::collectBonuses()
+{
+    switch(this->map->collectBonus(this->position.ry(),this->position.rx())){
+    case 0:
+        return;
+        break;
+    case 1:
+        score++;
         break;
     }
 }

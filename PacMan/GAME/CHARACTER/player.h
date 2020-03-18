@@ -14,7 +14,10 @@ protected:
     //METHODS
 public:
     Player(Board *map);
+
     int imageState() override;
+    void collectBonuses();
+
 };
 
 #endif // PLAYER_H

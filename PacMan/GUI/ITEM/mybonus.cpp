@@ -4,6 +4,8 @@
 #include <QPen>
 MyBonus::MyBonus(unsigned int x,unsigned int y,bool isBoost,unsigned int scale,QPointF boardPosition,QGraphicsItem *parent) : QGraphicsEllipseItem(parent)
 {
+
+
     float sizeOfBonus;
     if(!isBoost){
         sizeOfBonus = scale/3.5;
@@ -21,4 +23,5 @@ MyBonus::MyBonus(unsigned int x,unsigned int y,bool isBoost,unsigned int scale,Q
     setPen(Qt::NoPen);
 
 }
+
 

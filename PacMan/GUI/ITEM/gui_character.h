@@ -35,6 +35,7 @@ public:
     Gui_Character(GameCharacter *character,QVector<QVector<QPixmap>> images,unsigned int scale,int timerInterval,QPointF boardPosition,QGraphicsItem *parent = nullptr,QObject *pom = nullptr);
     ~Gui_Character();
     void  updatePosition();
+    QPoint getCharacterPosition();
 
 public slots:
     void onTick();
