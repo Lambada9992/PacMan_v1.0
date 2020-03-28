@@ -5,6 +5,7 @@
 #include "GAME/board.h"
 #include "GAME/CHARACTER/myplayer.h"
 #include <QObject>
+#include "GAME/CHARACTER/ghost.h"
 
 class Game : public QObject
 {
@@ -13,8 +14,10 @@ class Game : public QObject
 public:
     Board playground;
 private:
+    unsigned int mode;
     QTimer *timer;
     QVector<Player *> players;
+    QVector<Ghost *> ghosts;
     bool isLive;
 
 
@@ -24,13 +27,18 @@ public://public methods
     Game();
     ~Game();
 
-    void myPlayerControl(int direction);
+    void setMode(unsigned int mode);
     void start();
     void stop();
-    void makeMoves();
+    void myPlayerControl(int direction);
+
+
     GameCharacter *character(unsigned int index);
-    unsigned int amountOfChracters();// update when add ghosts
+    unsigned int amountOfChracters();
     int getTimerInterval();
+private:
+    void makeMoves();
+    void clear();
 
 public slots:
     void onTick();

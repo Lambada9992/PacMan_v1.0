@@ -1,4 +1,5 @@
 #include "gui_character.h"
+#include "Game/CHARACTER/player.h"
 
 Gui_Character::Gui_Character(GameCharacter *character,QVector<QVector<QPixmap>> images,unsigned int scale,int timerInterval,QPointF boardPosition,QGraphicsItem *parent,QObject *pom) : QObject(pom), QGraphicsPixmapItem(parent)
 {
@@ -14,8 +15,6 @@ Gui_Character::Gui_Character(GameCharacter *character,QVector<QVector<QPixmap>> 
     this->isMoving = false;
     this->animation->setDuration(this->timerInterval-this->timerInterval/5);
 
-
-
     for(int i=0;i<this->images.size();i++){
         for(int j = 0; j < this->images[i].size();j++){
             this->images[i][j] = this->images[i][j].scaled(scale+extrapixel, scale+extrapixel, Qt::KeepAspectRatio, Qt::SmoothTransformation);
@@ -26,7 +25,13 @@ Gui_Character::Gui_Character(GameCharacter *character,QVector<QVector<QPixmap>> 
     this->position = QPointF(boardPosition.rx()+character->getPosition().rx()*scale-(extrapixel/2),boardPosition.ry()+character->getPosition().ry()*scale-(extrapixel/2));
     this->setPos(this->position);
 
-    timer.setInterval(timerInterval/2);
+    if(dynamic_cast<Player*>(character)!=NULL){
+        this->CollectingCoins = true;
+    }else{
+        this->CollectingCoins = false;
+    }
+
+    timer.setInterval((timerInterval/images[0].size())*4);
     connect(&timer,SIGNAL(timeout()),this,SLOT(onTick()));
     timer.start();
 

@@ -106,6 +106,7 @@ void GUI_View::displayGame()
 
     //game start
     game.start();
+
 }
 
 void GUI_View::singleplayerButtonClicked()

@@ -19,6 +19,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     GAME/CHARACTER/gamecharacter.cpp \
+    GAME/CHARACTER/ghost.cpp \
     GAME/CHARACTER/myplayer.cpp \
     GAME/CHARACTER/player.cpp \
     GAME/board.cpp \
@@ -33,6 +34,7 @@ SOURCES += \
 
 HEADERS += \ \
     GAME/CHARACTER/gamecharacter.h \
+    GAME/CHARACTER/ghost.h \
     GAME/CHARACTER/myplayer.h \
     GAME/CHARACTER/player.h \
     GAME/board.h \

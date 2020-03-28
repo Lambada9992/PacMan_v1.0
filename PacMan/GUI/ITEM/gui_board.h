@@ -31,7 +31,7 @@ public:
 private:
     void initObstacle(Game &game);
     void initBonus(Game &game);
-    void initPlayers(Game &game);    
+    void initPlayersAndGhosts(Game &game);
     void loadImages();
 public slots:
     void updateCharacters();

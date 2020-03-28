@@ -26,6 +26,7 @@ class Gui_Character : public QObject,public QGraphicsPixmapItem
     QTimer timer;
     QPropertyAnimation *animation;
     bool isMoving;
+    bool CollectingCoins;
 
 
 
@@ -36,6 +37,7 @@ public:
     ~Gui_Character();
     void  updatePosition();
     QPoint getCharacterPosition();
+    bool isCollectingCoins(){return CollectingCoins;}
 
 public slots:
     void onTick();

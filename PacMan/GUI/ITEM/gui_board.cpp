@@ -25,7 +25,7 @@ Gui_Board::Gui_Board(int x, int y, unsigned int scale,Game &game, QGraphicsItem 
     initObstacle(game);
     initBonus(game);
     loadImages();
-    initPlayers(game);
+    initPlayersAndGhosts(game);
 
 
 }
@@ -54,7 +54,9 @@ void Gui_Board::initObstacle(Game &game)
                 neighbours.resize(4);
 
                 //up
-                if(i==0){neighbours[0] = 0;}else{
+                if(i==0){
+                    neighbours[0] = 0;
+                }else{
                     if(game.playground.getObstacleMap(i-1,j)==0){
                         neighbours[0] = 1;
                     }else{
@@ -123,46 +125,88 @@ void Gui_Board::initBonus(Game &game)
 
 
 
-void Gui_Board::initPlayers(Game &game)
+void Gui_Board::initPlayersAndGhosts(Game &game)
 {
     this->playersAndGhosts.resize(game.amountOfChracters());
     for(unsigned int i = 0;i < playersAndGhosts.size();i++){
         if(game.character(i)!= nullptr){
-            playersAndGhosts[i] = new Gui_Character(game.character(i),images[i],this->scale,game.getTimerInterval(),this->position,this);}else{
+            playersAndGhosts[i] = new Gui_Character(game.character(i),images[i],this->scale,game.getTimerInterval(),this->position,this);
+        }else{
             playersAndGhosts[i] = nullptr;
         }
     }
 
 }
 
-void Gui_Board::loadImages()
+void Gui_Board::loadImages()//brakuje empty image moze znalezc sposob aby wylaczyc show()
 {
     this->images.resize(8); //4 players and 4 ghosts
 
     for(int i = 0 ; i<images.size()/2;i++){
-        images[i].resize(5);// 4 directions + dead(empty image)
+        images[i].resize(4);// 4 directions + dead(empty image)
     }
     for(int i = images.size()/2 ; i<images.size();i++){
         images[i].resize(6);// 4 directions + 1 fear img + 1dead
     }
 
     for(int i = 0 ; i<images.size()/2;i++){
-        for(int j=0;j<5;j++){
+        for(int j=0;j<images[i].size();j++){
             images[i][j].resize(4);
         }
     }
     for(int i = images.size()/2 ; i<images.size();i++){
-        for(int j=0;j<6;j++){
-            images[i][j].resize(4);
+        for(int j=0;j<images[i].size();j++){
+            images[i][j].resize(2);
         }
     }
-    ////pac man images
-    images[0] = {{QPixmap(":/images/images/paccloseu.png"),QPixmap(":/images/images/pacopen1u.png"),QPixmap(":/images/images/pacopen2u.png"),QPixmap(":/images/images/pacopen3u.png")},
-                 {QPixmap(":/images/images/pacclose.png"),QPixmap(":/images/images/pacopen1.png"),QPixmap(":/images/images/pacopen2.png"),QPixmap(":/images/images/pacopen3.png")},
-                 {QPixmap(":/images/images/pacclosed.png"),QPixmap(":/images/images/pacopen1d.png"),QPixmap(":/images/images/pacopen2d.png"),QPixmap(":/images/images/pacopen3d.png")},
-                 {QPixmap(":/images/images/pacclosel.png"),QPixmap(":/images/images/pacopen1l.png"),QPixmap(":/images/images/pacopen2l.png"),QPixmap(":/images/images/pacopen3l.png")}
-
-
+    ////pac man images          ///1,2,3 need new images
+    images[0] = {{QPixmap(":/pacman1/images/paccloseu.png"),QPixmap(":/pacman1/images/pacopen1u.png"),QPixmap(":/pacman1/images/pacopen2u.png"),QPixmap(":/pacman1/images/pacopen3u.png")},
+                 {QPixmap(":/pacman1/images/pacclose.png"),QPixmap(":/pacman1/images/pacopen1.png"),QPixmap(":/pacman1/images/pacopen2.png"),QPixmap(":/pacman1/images/pacopen3.png")},
+                 {QPixmap(":/pacman1/images/pacclosed.png"),QPixmap(":/pacman1/images/pacopen1d.png"),QPixmap(":/pacman1/images/pacopen2d.png"),QPixmap(":/pacman1/images/pacopen3d.png")},
+                 {QPixmap(":/pacman1/images/pacclosel.png"),QPixmap(":/pacman1/images/pacopen1l.png"),QPixmap(":/pacman1/images/pacopen2l.png"),QPixmap(":/pacman1/images/pacopen3l.png")}
+                };
+    images[1] = {{QPixmap(":/pacman1/images/paccloseu.png"),QPixmap(":/pacman1/images/pacopen1u.png"),QPixmap(":/pacman1/images/pacopen2u.png"),QPixmap(":/pacman1/images/pacopen3u.png")},
+                 {QPixmap(":/pacman1/images/pacclose.png"),QPixmap(":/pacman1/images/pacopen1.png"),QPixmap(":/pacman1/images/pacopen2.png"),QPixmap(":/pacman1/images/pacopen3.png")},
+                 {QPixmap(":/pacman1/images/pacclosed.png"),QPixmap(":/pacman1/images/pacopen1d.png"),QPixmap(":/pacman1/images/pacopen2d.png"),QPixmap(":/pacman1/images/pacopen3d.png")},
+                 {QPixmap(":/pacman1/images/pacclosel.png"),QPixmap(":/pacman1/images/pacopen1l.png"),QPixmap(":/pacman1/images/pacopen2l.png"),QPixmap(":/pacman1/images/pacopen3l.png")}
+                };
+    images[2] = {{QPixmap(":/pacman1/images/paccloseu.png"),QPixmap(":/pacman1/images/pacopen1u.png"),QPixmap(":/pacman1/images/pacopen2u.png"),QPixmap(":/pacman1/images/pacopen3u.png")},
+                 {QPixmap(":/pacman1/images/pacclose.png"),QPixmap(":/pacman1/images/pacopen1.png"),QPixmap(":/pacman1/images/pacopen2.png"),QPixmap(":/pacman1/images/pacopen3.png")},
+                 {QPixmap(":/pacman1/images/pacclosed.png"),QPixmap(":/pacman1/images/pacopen1d.png"),QPixmap(":/pacman1/images/pacopen2d.png"),QPixmap(":/pacman1/images/pacopen3d.png")},
+                 {QPixmap(":/pacman1/images/pacclosel.png"),QPixmap(":/pacman1/images/pacopen1l.png"),QPixmap(":/pacman1/images/pacopen2l.png"),QPixmap(":/pacman1/images/pacopen3l.png")}
+                };
+    images[3] = {{QPixmap(":/pacman1/images/paccloseu.png"),QPixmap(":/pacman1/images/pacopen1u.png"),QPixmap(":/pacman1/images/pacopen2u.png"),QPixmap(":/pacman1/images/pacopen3u.png")},
+                 {QPixmap(":/pacman1/images/pacclose.png"),QPixmap(":/pacman1/images/pacopen1.png"),QPixmap(":/pacman1/images/pacopen2.png"),QPixmap(":/pacman1/images/pacopen3.png")},
+                 {QPixmap(":/pacman1/images/pacclosed.png"),QPixmap(":/pacman1/images/pacopen1d.png"),QPixmap(":/pacman1/images/pacopen2d.png"),QPixmap(":/pacman1/images/pacopen3d.png")},
+                 {QPixmap(":/pacman1/images/pacclosel.png"),QPixmap(":/pacman1/images/pacopen1l.png"),QPixmap(":/pacman1/images/pacopen2l.png"),QPixmap(":/pacman1/images/pacopen3l.png")}
+                };
+    images[4] = {{QPixmap(":/ghost1/images/ghostup1.png"),QPixmap(":/ghost1/images/ghostup2.png")},
+                 {QPixmap(":/ghost1/images/ghostright1.png"),QPixmap(":/ghost1/images/ghostright2.png")},
+                 {QPixmap(":/ghost1/images/ghostdown1.png"),QPixmap(":/ghost1/images/ghostdown2.png")},
+                 {QPixmap(":/ghost1/images/ghostleft1.png"),QPixmap(":/ghost1/images/ghostleft2.png")},
+                 {QPixmap(":/ghost1/images/ghostscaredblue1.png"),QPixmap(":/ghost1/images/ghostscaredblue2.png")},
+                 {QPixmap(":/ghost1/images/ghostscaredwhite2.png"),QPixmap(":/ghost1/images/ghostscaredwhite2.png")}
+                };
+    images[5] = {{QPixmap(":/ghost2/images/ghostupblue1.png"),QPixmap(":/ghost2/images/ghostupblue2.png")},
+                 {QPixmap(":/ghost2/images/ghostrightblue1.png"),QPixmap(":/ghost2/images/ghostrightblue2.png")},
+                 {QPixmap(":/ghost2/images/ghostdownblue1.png"),QPixmap(":/ghost2/images/ghostdownblue2.png")},
+                 {QPixmap(":/ghost2/images/ghostleftblue1.png"),QPixmap(":/ghost2/images/ghostleftblue2.png")},
+                 {QPixmap(":/ghost2/images/ghostscaredblue1.png"),QPixmap(":/ghost2/images/ghostscaredblue2.png")},
+                 {QPixmap(":/ghost2/images/ghostscaredwhite2.png"),QPixmap(":/ghost2/images/ghostscaredwhite2.png")}
+                };
+    images[6] = {{QPixmap(":/ghost3/images/ghostupred1.png"),QPixmap(":/ghost3/images/ghostupred2.png")},
+                 {QPixmap(":/ghost3/images/ghostrightred1.png"),QPixmap(":/ghost3/images/ghostrightred2.png")},
+                 {QPixmap(":/ghost3/images/ghostdownred1.png"),QPixmap(":/ghost3/images/ghostdownred2.png")},
+                 {QPixmap(":/ghost3/images/ghostleftred1.png"),QPixmap(":/ghost3/images/ghostleftred2.png")},
+                 {QPixmap(":/ghost3/images/ghostscaredblue1.png"),QPixmap(":/ghost3/images/ghostscaredblue2.png")},
+                 {QPixmap(":/ghost3/images/ghostscaredwhite2.png"),QPixmap(":/ghost3/images/ghostscaredwhite2.png")}
+                };
+    images[7] = {{QPixmap(":/ghost4/images/ghostuporange1.png"),QPixmap(":/ghost4/images/ghostuporange2.png")},
+                 {QPixmap(":/ghost4/images/ghostrightorange1.png"),QPixmap(":/ghost4/images/ghostrightorange2.png")},
+                 {QPixmap(":/ghost4/images/ghostdownorange1.png"),QPixmap(":/ghost4/images/ghostdownorange2.png")},
+                 {QPixmap(":/ghost4/images/ghostleftorange1.png"),QPixmap(":/ghost4/images/ghostleftorange2.png")},
+                 {QPixmap(":/ghost4/images/ghostscaredblue1.png"),QPixmap(":/ghost4/images/ghostscaredblue2.png")},
+                 {QPixmap(":/ghost4/images/ghostscaredwhite2.png"),QPixmap(":/ghost4/images/ghostscaredwhite2.png")}
                 };
 
 }
@@ -172,9 +216,11 @@ void Gui_Board::updateCharacters()
     for(int i = 0;i< this->playersAndGhosts.size();i++){
         if(playersAndGhosts[i]!= nullptr){
             playersAndGhosts[i]->updatePosition();
-            if(this->bonusMap[playersAndGhosts[i]->getCharacterPosition().ry()][playersAndGhosts[i]->getCharacterPosition().rx()]!= nullptr){
-                delete this->bonusMap[playersAndGhosts[i]->getCharacterPosition().ry()][playersAndGhosts[i]->getCharacterPosition().rx()];
-                this->bonusMap[playersAndGhosts[i]->getCharacterPosition().ry()][playersAndGhosts[i]->getCharacterPosition().rx()]=nullptr;
+            if(playersAndGhosts[i]->isCollectingCoins()){
+                if(this->bonusMap[playersAndGhosts[i]->getCharacterPosition().ry()][playersAndGhosts[i]->getCharacterPosition().rx()]!= nullptr){
+                    delete this->bonusMap[playersAndGhosts[i]->getCharacterPosition().ry()][playersAndGhosts[i]->getCharacterPosition().rx()];
+                    this->bonusMap[playersAndGhosts[i]->getCharacterPosition().ry()][playersAndGhosts[i]->getCharacterPosition().rx()]=nullptr;
+                }
             }
 
         }

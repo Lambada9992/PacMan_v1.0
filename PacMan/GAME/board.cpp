@@ -4,7 +4,7 @@
 Board::Board()
 {
     //var init
-    spawnPoints.resize(5);
+    spawnPoints.resize(8);
 
     //start map
     this->setMap(1);
@@ -86,7 +86,7 @@ void Board::setMap(unsigned int index)
         };
 
 
-        this->spawnPoints = {QPoint(1,1),QPoint(getMapSizeX()-2,1),QPoint(1,getMapSizeY()-2),QPoint(getMapSizeX()-2,getMapSizeY()-2),QPoint(0,0)};//SPAWN DUCHOW DO POPRAWY
+        this->spawnPoints = {QPoint(1,1),QPoint(getMapSizeX()-2,1),QPoint(1,getMapSizeY()-2),QPoint(getMapSizeX()-2,getMapSizeY()-2),QPoint(12,14),QPoint(13,14),QPoint(14,14),QPoint(15,14)};//SPAWN DUCHOW DO POPRAWY
         break;
     default:
         this->setMap(1);
