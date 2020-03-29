@@ -45,16 +45,21 @@ Gui_Character::~Gui_Character()
 
 void Gui_Character::updatePosition()
 {
-    if(this->pos() - QPointF(boardPosition.rx()+character->getPosition().rx()*scale-(extrapixel/2),boardPosition.ry()+character->getPosition().ry()*scale-(extrapixel/2)) == QPointF(0,0)){
+    QPointF nextPosition(boardPosition.rx()+character->getPosition().rx()*scale-(extrapixel/2),boardPosition.ry()+character->getPosition().ry()*scale-(extrapixel/2));
+    if(this->pos() - nextPosition == QPointF(0,0)){
         this->isMoving = false;
     }else{
         this->isMoving = true;
     }
 
 
+    if(((this->pos().rx()-nextPosition.rx())*(this->pos().rx()-nextPosition.rx())) + ((this->pos().ry()-nextPosition.ry())*(this->pos().ry()-nextPosition.ry())) < scale*scale*2){
     this->animation->setStartValue(this->pos());
-    this->animation->setEndValue(QPointF(boardPosition.rx()+character->getPosition().rx()*scale-(extrapixel/2),boardPosition.ry()+character->getPosition().ry()*scale-(extrapixel/2)));
+    this->animation->setEndValue(nextPosition);
     animation->start();
+    }else{
+        setPos(nextPosition);
+    }
 }
 
 QPoint Gui_Character::getCharacterPosition()

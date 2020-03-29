@@ -1,4 +1,7 @@
 #include "ghost.h"
+#include <QDebug>
+
+bool Ghost::isFeared = false;
 
 Ghost::Ghost(Board *map) : GameCharacter(map)
 {
@@ -7,6 +10,8 @@ Ghost::Ghost(Board *map) : GameCharacter(map)
 
 int Ghost::imageState()
 {
+
+    if(Ghost::isFeared==true)return 4;
     switch (this->direction) {
     case 1:
         return 0;

@@ -3,16 +3,24 @@
 
 #include "GAME/CHARACTER/gamecharacter.h"
 #include <QTimer>
+
+
 class Ghost : public GameCharacter
 {
+
+public:
     static bool isFeared;
-    static QTimer timer;
+
 public:
     Ghost(Board *map);
 
     int imageState() override;
 
     void randomNextDirection();
+
+
 };
+
+
 
 #endif // GHOST_H

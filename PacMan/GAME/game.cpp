@@ -15,6 +15,8 @@ Game::Game()
     this->mode = 0;
     this->timer = nullptr;
     this->isLive = false;
+    this->fearTime = 5000;
+    this->fearState = 0;
 
     setMode(1);//do usuniecia
 
@@ -107,15 +109,29 @@ void Game::makeMoves()
     for(int i =0;i<players.size();i++){
         if(players[i]!=nullptr){
             players[i]->move();
-            players[i]->collectBonuses();
+            if(players[i]->collectBonuses()){
+                Ghost::isFeared=true;
+                fearState++;
+                QTimer::singleShot(fearTime,this,SLOT(cancelFear()));
+
+            }
         }
     }
+    //colision check
     for(int i =0;i<ghosts.size();i++){
         if(ghosts[i]!=nullptr){
             ghosts[i]->randomNextDirection();
             ghosts[i]->move();
         }
     }
+}
+
+void Game::colisions()/////////////to do
+{
+    for(int i =0;i<players.size();i++){
+
+    }
+
 }
 
 GameCharacter *Game::character(unsigned int index)
@@ -142,5 +158,15 @@ void Game::onTick()
     if(playground.ended())this->stop();
     emit update();
 
+}
+
+void Game::cancelFear()
+{
+    if(fearState==1){
+        Ghost::isFeared = false;
+        fearState--;
+    }else{
+        fearState--;
+    }
 }
 

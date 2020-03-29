@@ -29,14 +29,19 @@ int Player::imageState()
     }
 }
 
-void Player::collectBonuses()
+bool Player::collectBonuses()
 {
     switch(this->map->collectBonus(this->position.ry(),this->position.rx())){
     case 0:
-        return;
+        return false;
         break;
     case 1:
         score++;
+        return false;
         break;
+    case 2:
+        return true;
+        break;
+
     }
 }

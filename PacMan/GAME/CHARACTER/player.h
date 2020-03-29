@@ -3,6 +3,7 @@
 
 #include "GAME/CHARACTER/gamecharacter.h"
 
+
 class Player : public GameCharacter
 {
     //VAR
@@ -16,7 +17,9 @@ public:
     Player(Board *map);
 
     int imageState() override;
-    void collectBonuses();
+    bool collectBonuses();// return true if collected fearing bonus
+
+
 
 };
 

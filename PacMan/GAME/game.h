@@ -19,6 +19,8 @@ private:
     QVector<Player *> players;
     QVector<Ghost *> ghosts;
     bool isLive;
+    unsigned int fearTime;
+    unsigned int fearState;
 
 
 
@@ -38,10 +40,12 @@ public://public methods
     int getTimerInterval();
 private:
     void makeMoves();
+    void colisions();
     void clear();
 
 public slots:
     void onTick();
+    void cancelFear();
 signals:
     void update();
 
