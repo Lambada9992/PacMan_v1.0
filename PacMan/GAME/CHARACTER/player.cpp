@@ -8,8 +8,14 @@ Player::Player(Board *map) : GameCharacter(map)
 
 }
 
+Player::~Player()
+{
+
+}
+
 int Player::imageState()
 {
+    if(this->isAlive==false)return 4;
     switch (this->direction) {
     case 1:
         return 0;
@@ -44,4 +50,15 @@ bool Player::collectBonuses()
         break;
 
     }
+}
+
+void Player::kill()
+{
+    if(life!=0)life--;
+    this->isAlive = false;
+}
+
+unsigned int Player::getLife()
+{
+    return this->life;
 }

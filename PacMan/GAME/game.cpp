@@ -17,6 +17,7 @@ Game::Game()
     this->isLive = false;
     this->fearTime = 5000;
     this->fearState = 0;
+    this->server = nullptr;
 
     setMode(1);//do usuniecia
 
@@ -41,21 +42,41 @@ void Game::setMode(unsigned int mode)
         connect(timer,SIGNAL(timeout()),this,SLOT(onTick()));
 
         //MyPlayer Initialization
+        myPlayerIndex = 0;
         players[0] = new MyPlayer(&playground);
-        players[0]->setPosition(playground.getSpawnPoint(0));
+        players[0]->setSpawnPosition(playground.getSpawnPoint(0));
 
         //ghosts initialization
         ghosts[0]= new Ghost(&playground);
-        ghosts[0]->setPosition(playground.getSpawnPoint(4+0));
+        ghosts[0]->setSpawnPosition(playground.getSpawnPoint(4+0));
         ghosts[1]= new Ghost(&playground);
-        ghosts[1]->setPosition(playground.getSpawnPoint(4+1));
+        ghosts[1]->setSpawnPosition(playground.getSpawnPoint(4+1));
         ghosts[2]= new Ghost(&playground);
-        ghosts[2]->setPosition(playground.getSpawnPoint(4+2));
+        ghosts[2]->setSpawnPosition(playground.getSpawnPoint(4+2));
         ghosts[3]= new Ghost(&playground);
-        ghosts[3]->setPosition(playground.getSpawnPoint(4+3));
+        ghosts[3]->setSpawnPosition(playground.getSpawnPoint(4+3));
 
 
         break;
+    case 2:
+        ////////////////////////do zmiany
+        this->mode = 0;
+
+        //timer initialization
+        this->timer = new QTimer();
+        timer->setInterval(100);
+        connect(timer,SIGNAL(timeout()),this,SLOT(onTick()));
+
+
+
+        server = new QTcpServer(this);
+        connect(server,SIGNAL(newConnection()),this,SLOT(newConnection()));
+        server->listen(QHostAddress::Any,1234);
+
+        myPlayerIndex = 0;
+        players[0] = new MyPlayer(&playground);
+        players[0]->setSpawnPosition(playground.getSpawnPoint(0));
+
     default:
         this->mode = 0;
         break;
@@ -80,13 +101,32 @@ void Game::clear()
         delete timer;
         timer= nullptr;
     }
+    if(server!=nullptr){
+        delete server;
+        server = nullptr;
+    }
+
+}
+
+bool Game::ended()
+{
+    if(playground.isAllBonusCollected())return true;
+
+    for(int i =0;i<players.size();i++){
+        if(players[i]!=nullptr){
+            if(players[i]->getIsAlive()==true)return false;;
+        }
+    }
+
+    return true;
 
 }
 
 void Game::myPlayerControl(int direction)
 {
+    if(this->mode == 0)return;
     if(!isLive)return;
-    players[0]->setNextDirection(direction);
+    players[myPlayerIndex]->setNextDirection(direction);
 
 }
 
@@ -108,6 +148,7 @@ void Game::makeMoves()
 {
     for(int i =0;i<players.size();i++){
         if(players[i]!=nullptr){
+            if(!players[i]->getIsAlive())continue;
             players[i]->move();
             if(players[i]->collectBonuses()){
                 Ghost::isFeared=true;
@@ -117,18 +158,43 @@ void Game::makeMoves()
             }
         }
     }
-    //colision check
+
+    this->colisions();
+
     for(int i =0;i<ghosts.size();i++){
         if(ghosts[i]!=nullptr){
             ghosts[i]->randomNextDirection();
             ghosts[i]->move();
         }
     }
+
+    this->colisions();
+
 }
 
-void Game::colisions()/////////////to do
+void Game::colisions()
 {
     for(int i =0;i<players.size();i++){
+
+        if(players[i]==nullptr)continue;
+
+        if(players[i]->getIsAlive()==false)continue;
+
+        for(int j =0 ;j<ghosts.size();j++){
+
+            if(ghosts[i]==nullptr)continue;
+
+            if(ghosts[j]->getIsAlive()==false)continue;
+
+            if(players[i]->getPosition()!=ghosts[j]->getPosition())continue;
+
+            if(Ghost::isFeared == false){
+                players[i]->kill();
+            }else{
+                ghosts[j]->kill();
+            }
+
+        }
 
     }
 
@@ -146,17 +212,57 @@ unsigned int Game::amountOfChracters()
     return this->players.size()+this->ghosts.size();
 }
 
+bool Game::isAnyPlayerAlive()
+{
+    for(int i = 0;i<players.size();i++){
+        if(players[i]==nullptr)continue;
+        if(players[i]->getIsAlive())return true;
+    }
+    return false;
+}
+
 int Game::getTimerInterval()
 {
     return this->timer->interval();
+}
+
+void Game::resetLevel()
+{
+    for(int i = 0; i<players.size();i++){
+        if(players[i]==nullptr)continue;
+        if(players[i]->getLife()>0){players[i]->resurect();}
+    }
+
+    for(int i = 0 ;i<ghosts.size();i++){
+        if(ghosts[i]==nullptr)continue;
+        ghosts[i]->goSpawn();
+        ghosts[i]->resurect();
+    }
+
+    Ghost::isFeared = false;
 }
 
 void Game::onTick()
 {
 
     makeMoves();
-    if(playground.ended())this->stop();
     emit update();
+
+    if(playground.isAllBonusCollected()){
+        this->stop();
+        //go to next level
+        emit update();
+    }
+
+    if(!isAnyPlayerAlive()){
+        resetLevel();
+        if(!isAnyPlayerAlive()){
+            this->stop();
+            emit update();
+        }
+    }
+
+
 
 }
 
@@ -168,5 +274,10 @@ void Game::cancelFear()
     }else{
         fearState--;
     }
+}
+
+void Game::newConnection()
+{
+
 }
 

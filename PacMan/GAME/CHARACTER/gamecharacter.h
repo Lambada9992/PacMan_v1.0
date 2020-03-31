@@ -10,6 +10,7 @@ class GameCharacter
 protected:
     Board *map;
     QPoint position;
+    QPoint spawnPosition;
     unsigned int direction;
     unsigned int nextDirection;
     bool isAlive;
@@ -20,14 +21,19 @@ protected:
 
     //METHODS
 public:
+    void resurect();
+    void move();
+    void goSpawn();
+    virtual int imageState()=0;
+
     GameCharacter(Board *map);
     void setNextDirection(int nextDirection);
     bool setPosition(unsigned int y,unsigned int x);
     bool setPosition(QPoint position);
-    void move();
-    virtual int imageState()=0;
+    bool setSpawnPosition(QPoint position);
 
     QPoint getPosition();
+    bool getIsAlive();
 
 };
 

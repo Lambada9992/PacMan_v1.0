@@ -13,9 +13,11 @@ public:
 
 public:
     Ghost(Board *map);
+    ~Ghost();
+
+    void kill();
 
     int imageState() override;
-
     void randomNextDirection();
 
 

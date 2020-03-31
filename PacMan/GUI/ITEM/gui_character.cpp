@@ -53,7 +53,7 @@ void Gui_Character::updatePosition()
     }
 
 
-    if(((this->pos().rx()-nextPosition.rx())*(this->pos().rx()-nextPosition.rx())) + ((this->pos().ry()-nextPosition.ry())*(this->pos().ry()-nextPosition.ry())) < scale*scale*2){
+    if(((this->pos().rx()-nextPosition.rx())*(this->pos().rx()-nextPosition.rx())) + ((this->pos().ry()-nextPosition.ry())*(this->pos().ry()-nextPosition.ry())) < scale*scale*4){
     this->animation->setStartValue(this->pos());
     this->animation->setEndValue(nextPosition);
     animation->start();

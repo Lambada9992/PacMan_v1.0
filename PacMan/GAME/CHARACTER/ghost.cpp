@@ -8,9 +8,19 @@ Ghost::Ghost(Board *map) : GameCharacter(map)
 
 }
 
-int Ghost::imageState()
+Ghost::~Ghost()
 {
 
+}
+
+void Ghost::kill()
+{
+ this->isAlive = false;
+}
+
+int Ghost::imageState()
+{
+    if(isAlive==false)return 5;
     if(Ghost::isFeared==true)return 4;
     switch (this->direction) {
     case 1:

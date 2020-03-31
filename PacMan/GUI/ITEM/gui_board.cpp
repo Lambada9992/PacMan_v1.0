@@ -143,7 +143,7 @@ void Gui_Board::loadImages()//brakuje empty image moze znalezc sposob aby wylacz
     this->images.resize(8); //4 players and 4 ghosts
 
     for(int i = 0 ; i<images.size()/2;i++){
-        images[i].resize(4);// 4 directions + dead(empty image)
+        images[i].resize(5);// 4 directions + dead(empty image)
     }
     for(int i = images.size()/2 ; i<images.size();i++){
         images[i].resize(6);// 4 directions + 1 fear img + 1dead
@@ -160,25 +160,29 @@ void Gui_Board::loadImages()//brakuje empty image moze znalezc sposob aby wylacz
         }
     }
     ////pac man images          ///1,2,3 need new images
-    images[0] = {{QPixmap(":/pacman1/images/paccloseu.png"),QPixmap(":/pacman1/images/pacopen1u.png"),QPixmap(":/pacman1/images/pacopen2u.png"),QPixmap(":/pacman1/images/pacopen3u.png")},
-                 {QPixmap(":/pacman1/images/pacclose.png"),QPixmap(":/pacman1/images/pacopen1.png"),QPixmap(":/pacman1/images/pacopen2.png"),QPixmap(":/pacman1/images/pacopen3.png")},
-                 {QPixmap(":/pacman1/images/pacclosed.png"),QPixmap(":/pacman1/images/pacopen1d.png"),QPixmap(":/pacman1/images/pacopen2d.png"),QPixmap(":/pacman1/images/pacopen3d.png")},
-                 {QPixmap(":/pacman1/images/pacclosel.png"),QPixmap(":/pacman1/images/pacopen1l.png"),QPixmap(":/pacman1/images/pacopen2l.png"),QPixmap(":/pacman1/images/pacopen3l.png")}
+    images[0] = {{QPixmap(":/pacman1/images/pac0u.png"),QPixmap(":/pacman1/images/pac1u.png"),QPixmap(":/pacman1/images/pac2u.png"),QPixmap(":/pacman1/images/pac3u.png")},
+                 {QPixmap(":/pacman1/images/pac0r.png"),QPixmap(":/pacman1/images/pac1r.png"),QPixmap(":/pacman1/images/pac2r.png"),QPixmap(":/pacman1/images/pac3r.png")},
+                 {QPixmap(":/pacman1/images/pac0d.png"),QPixmap(":/pacman1/images/pac1d.png"),QPixmap(":/pacman1/images/pac2d.png"),QPixmap(":/pacman1/images/pac3d.png")},
+                 {QPixmap(":/pacman1/images/pac0l.png"),QPixmap(":/pacman1/images/pac1l.png"),QPixmap(":/pacman1/images/pac2l.png"),QPixmap(":/pacman1/images/pac3l.png")},
+                 {QPixmap(":/pacman1/images/empty.png"),QPixmap(":/pacman1/images/empty.png"),QPixmap(":/pacman1/images/empty.png"),QPixmap(":/pacman1/images/empty.png")}
                 };
-    images[1] = {{QPixmap(":/pacman1/images/paccloseu.png"),QPixmap(":/pacman1/images/pacopen1u.png"),QPixmap(":/pacman1/images/pacopen2u.png"),QPixmap(":/pacman1/images/pacopen3u.png")},
-                 {QPixmap(":/pacman1/images/pacclose.png"),QPixmap(":/pacman1/images/pacopen1.png"),QPixmap(":/pacman1/images/pacopen2.png"),QPixmap(":/pacman1/images/pacopen3.png")},
-                 {QPixmap(":/pacman1/images/pacclosed.png"),QPixmap(":/pacman1/images/pacopen1d.png"),QPixmap(":/pacman1/images/pacopen2d.png"),QPixmap(":/pacman1/images/pacopen3d.png")},
-                 {QPixmap(":/pacman1/images/pacclosel.png"),QPixmap(":/pacman1/images/pacopen1l.png"),QPixmap(":/pacman1/images/pacopen2l.png"),QPixmap(":/pacman1/images/pacopen3l.png")}
+    images[1] = {{QPixmap(":/pacman2/images/pacgreen0u.png"),QPixmap(":/pacman2/images/pacgreen1u.png"),QPixmap(":/pacman2/images/pacgreen2u.png"),QPixmap(":/pacman2/images/pacgreen3u.png")},
+                 {QPixmap(":/pacman2/images/pacgreen0r.png"),QPixmap(":/pacman2/images/pacgreen1r.png"),QPixmap(":/pacman2/images/pacgreen2r.png"),QPixmap(":/pacman2/images/pacgreen3r.png")},
+                 {QPixmap(":/pacman2/images/pacgreen0d.png"),QPixmap(":/pacman2/images/pacgreen1d.png"),QPixmap(":/pacman2/images/pacgreen2d.png"),QPixmap(":/pacman2/images/pacgreen3d.png")},
+                 {QPixmap(":/pacman2/images/pacgreen0l.png"),QPixmap(":/pacman2/images/pacgreen1l.png"),QPixmap(":/pacman2/images/pacgreen2l.png"),QPixmap(":/pacman2/images/pacgreen3l.png")},
+                 {QPixmap(":/pacman2/images/empty.png"),QPixmap(":/pacman2/images/empty.png"),QPixmap(":/pacman2/images/empty.png"),QPixmap(":/pacman2/images/empty.png")}
                 };
-    images[2] = {{QPixmap(":/pacman1/images/paccloseu.png"),QPixmap(":/pacman1/images/pacopen1u.png"),QPixmap(":/pacman1/images/pacopen2u.png"),QPixmap(":/pacman1/images/pacopen3u.png")},
-                 {QPixmap(":/pacman1/images/pacclose.png"),QPixmap(":/pacman1/images/pacopen1.png"),QPixmap(":/pacman1/images/pacopen2.png"),QPixmap(":/pacman1/images/pacopen3.png")},
-                 {QPixmap(":/pacman1/images/pacclosed.png"),QPixmap(":/pacman1/images/pacopen1d.png"),QPixmap(":/pacman1/images/pacopen2d.png"),QPixmap(":/pacman1/images/pacopen3d.png")},
-                 {QPixmap(":/pacman1/images/pacclosel.png"),QPixmap(":/pacman1/images/pacopen1l.png"),QPixmap(":/pacman1/images/pacopen2l.png"),QPixmap(":/pacman1/images/pacopen3l.png")}
+    images[2] = {{QPixmap(":/pacman1/images/pac0u.png"),QPixmap(":/pacman1/images/pac1u.png"),QPixmap(":/pacman1/images/pac2u.png"),QPixmap(":/pacman1/images/pac3u.png")},
+                 {QPixmap(":/pacman1/images/pac0r.png"),QPixmap(":/pacman1/images/pac1r.png"),QPixmap(":/pacman1/images/pac2r.png"),QPixmap(":/pacman1/images/pac3r.png")},
+                 {QPixmap(":/pacman1/images/pac0d.png"),QPixmap(":/pacman1/images/pac1d.png"),QPixmap(":/pacman1/images/pac2d.png"),QPixmap(":/pacman1/images/pac3d.png")},
+                 {QPixmap(":/pacman1/images/pac0l.png"),QPixmap(":/pacman1/images/pac1l.png"),QPixmap(":/pacman1/images/pac2l.png"),QPixmap(":/pacman1/images/pac3l.png")},
+                 {QPixmap(":/pacman1/images/empty.png"),QPixmap(":/pacman1/images/empty.png"),QPixmap(":/pacman1/images/empty.png"),QPixmap(":/pacman1/images/empty.png")}
                 };
-    images[3] = {{QPixmap(":/pacman1/images/paccloseu.png"),QPixmap(":/pacman1/images/pacopen1u.png"),QPixmap(":/pacman1/images/pacopen2u.png"),QPixmap(":/pacman1/images/pacopen3u.png")},
-                 {QPixmap(":/pacman1/images/pacclose.png"),QPixmap(":/pacman1/images/pacopen1.png"),QPixmap(":/pacman1/images/pacopen2.png"),QPixmap(":/pacman1/images/pacopen3.png")},
-                 {QPixmap(":/pacman1/images/pacclosed.png"),QPixmap(":/pacman1/images/pacopen1d.png"),QPixmap(":/pacman1/images/pacopen2d.png"),QPixmap(":/pacman1/images/pacopen3d.png")},
-                 {QPixmap(":/pacman1/images/pacclosel.png"),QPixmap(":/pacman1/images/pacopen1l.png"),QPixmap(":/pacman1/images/pacopen2l.png"),QPixmap(":/pacman1/images/pacopen3l.png")}
+    images[3] = {{QPixmap(":/pacman1/images/pac0u.png"),QPixmap(":/pacman1/images/pac1u.png"),QPixmap(":/pacman1/images/pac2u.png"),QPixmap(":/pacman1/images/pac3u.png")},
+                 {QPixmap(":/pacman1/images/pac0r.png"),QPixmap(":/pacman1/images/pac1r.png"),QPixmap(":/pacman1/images/pac2r.png"),QPixmap(":/pacman1/images/pac3r.png")},
+                 {QPixmap(":/pacman1/images/pac0d.png"),QPixmap(":/pacman1/images/pac1d.png"),QPixmap(":/pacman1/images/pac2d.png"),QPixmap(":/pacman1/images/pac3d.png")},
+                 {QPixmap(":/pacman1/images/pac0l.png"),QPixmap(":/pacman1/images/pac1l.png"),QPixmap(":/pacman1/images/pac2l.png"),QPixmap(":/pacman1/images/pac3l.png")},
+                 {QPixmap(":/pacman1/images/empty.png"),QPixmap(":/pacman1/images/empty.png"),QPixmap(":/pacman1/images/empty.png"),QPixmap(":/pacman1/images/empty.png")}
                 };
     images[4] = {{QPixmap(":/ghost1/images/ghostup1.png"),QPixmap(":/ghost1/images/ghostup2.png")},
                  {QPixmap(":/ghost1/images/ghostright1.png"),QPixmap(":/ghost1/images/ghostright2.png")},

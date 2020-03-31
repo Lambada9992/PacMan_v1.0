@@ -6,6 +6,8 @@ GameCharacter::GameCharacter(Board *map)
     //var init
     this->position.setX(0);
     this->position.setY(0);
+    this->spawnPosition.setX(0);
+    this->spawnPosition.setY(0);
 
     this->nextDirection = 0;
     this->isAlive = true;
@@ -51,10 +53,24 @@ bool GameCharacter::setPosition(QPoint position)
 {
 
     if(map->getMapSizeX()-1 < position.rx() || map->getMapSizeY()-1 < position.ry())return false;
-    this->isPositioned = true;
     this->position.setX(position.rx());
     this->position.setY(position.ry());
     return true;
+}
+
+bool GameCharacter::setSpawnPosition(QPoint position)
+{
+    if(map->getMapSizeX()-1 < position.rx() || map->getMapSizeY()-1 < position.ry())return false;
+    this->isPositioned = true;
+    this->spawnPosition.setX(position.rx());
+    this->spawnPosition.setY(position.ry());
+    this->goSpawn();
+    return true;
+}
+
+void GameCharacter::resurect()
+{
+    isAlive = true;
 }
 
 void GameCharacter::move()
@@ -220,7 +236,17 @@ void GameCharacter::move()
 
 }
 
+void GameCharacter::goSpawn()
+{
+ this->position=this->spawnPosition;
+}
+
 QPoint GameCharacter::getPosition()
 {
- return position;
+    return position;
+}
+
+bool GameCharacter::getIsAlive()
+{
+ return this->isAlive;
 }

@@ -36,7 +36,7 @@ public://getery i setery
     unsigned int getBonusMap(unsigned int i,unsigned int j){return bonusMap[i][j];}
     unsigned int collectBonus(unsigned int i,unsigned int j);
     QPoint getSpawnPoint(unsigned int index);
-    bool ended();
+    bool isAllBonusCollected();
 
 };
 

@@ -1,21 +1,22 @@
 <RCC>
     <qresource prefix="/pacman1">
-        <file>images/pacclose.png</file>
-        <file>images/pacclosed.png</file>
-        <file>images/pacclosel.png</file>
-        <file>images/paccloseu.png</file>
-        <file>images/pacopen1.png</file>
-        <file>images/pacopen1d.png</file>
-        <file>images/pacopen1l.png</file>
-        <file>images/pacopen1u.png</file>
-        <file>images/pacopen2.png</file>
-        <file>images/pacopen2d.png</file>
-        <file>images/pacopen2l.png</file>
-        <file>images/pacopen2u.png</file>
-        <file>images/pacopen3.png</file>
-        <file>images/pacopen3d.png</file>
-        <file>images/pacopen3l.png</file>
-        <file>images/pacopen3u.png</file>
+        <file>images/pac0d.png</file>
+        <file>images/pac0l.png</file>
+        <file>images/pac0r.png</file>
+        <file>images/pac0u.png</file>
+        <file>images/pac1d.png</file>
+        <file>images/pac1l.png</file>
+        <file>images/pac1r.png</file>
+        <file>images/pac1u.png</file>
+        <file>images/pac2d.png</file>
+        <file>images/pac2l.png</file>
+        <file>images/pac2r.png</file>
+        <file>images/pac2u.png</file>
+        <file>images/pac3d.png</file>
+        <file>images/pac3l.png</file>
+        <file>images/pac3r.png</file>
+        <file>images/pac3u.png</file>
+        <file>images/empty.png</file>
     </qresource>
     <qresource prefix="/ghost1">
         <file>images/ghostdown1.png</file>
@@ -72,5 +73,24 @@
         <file>images/ghostscaredwhite2.png</file>
         <file>images/ghostuporange1.png</file>
         <file>images/ghostuporange2.png</file>
+    </qresource>
+    <qresource prefix="/pacman2">
+        <file>images/pacgreen0d.png</file>
+        <file>images/pacgreen0l.png</file>
+        <file>images/pacgreen0r.png</file>
+        <file>images/pacgreen0u.png</file>
+        <file>images/pacgreen1d.png</file>
+        <file>images/pacgreen1l.png</file>
+        <file>images/pacgreen1r.png</file>
+        <file>images/pacgreen1u.png</file>
+        <file>images/pacgreen2d.png</file>
+        <file>images/pacgreen2l.png</file>
+        <file>images/pacgreen2r.png</file>
+        <file>images/pacgreen2u.png</file>
+        <file>images/pacgreen3d.png</file>
+        <file>images/pacgreen3l.png</file>
+        <file>images/pacgreen3r.png</file>
+        <file>images/pacgreen3u.png</file>
+        <file>images/empty.png</file>
     </qresource>
 </RCC>
