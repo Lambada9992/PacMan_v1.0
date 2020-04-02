@@ -13,4 +13,4 @@ public:
 
 };
 
-#endif MYBONUS_H
+#endif // MYBONUS_H

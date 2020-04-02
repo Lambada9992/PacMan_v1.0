@@ -7,7 +7,7 @@
 #include <QObject>
 #include "GAME/CHARACTER/ghost.h"
 #include <QTcpServer>
-//#include "GAME/CHARACTER/onlineplayer.h"
+#include "GAME/CHARACTER/onlineplayer.h"
 
 class Game : public QObject
 {
@@ -27,8 +27,7 @@ private:
 
     //online var
     QTcpServer *server;
-    //QList<OnlinePlayer *> allConectedPlayers;
-
+    QList<OnlinePlayer *> allConectedPlayers;
 
 
 
@@ -54,6 +53,8 @@ private:
     bool ended();
     bool isAnyPlayerAlive();
     void resetLevel();
+    //online methods
+    void messageAll(std::string message);
 
 public slots:
     void onTick();

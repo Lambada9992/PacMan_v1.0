@@ -17,6 +17,11 @@ GameCharacter::GameCharacter(Board *map)
 
 }
 
+GameCharacter::~GameCharacter()
+{
+
+}
+
 
 void GameCharacter::setNextDirection(int nextDirection)
 {

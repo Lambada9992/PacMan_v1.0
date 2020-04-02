@@ -40,6 +40,7 @@ GUI_View::~GUI_View()
 void GUI_View::displayMainMenu()
 {
     if(scene == nullptr)return;
+    game.setMode(0);
 
     //clearing
     scene->clear();
@@ -70,10 +71,10 @@ void GUI_View::displayMainMenu()
     x = this->width()/2 - multiplayerButton->boundingRect().width()/2;
     y = 350;
     multiplayerButton->setPos(x,y);
-    //connect(multiplayerButton,SIGNAL(clicked()),this,SLOT(multiplayerButtonClicked()));
+    connect(multiplayerButton,SIGNAL(clicked()),this,SLOT(multiplayerButtonClicked()));
     scene->addItem(multiplayerButton);
 
-    //info butonn
+    //info button
     MyButton *creditsButton = new MyButton(QString("Credits"));
     x = this->width()/2 - creditsButton->boundingRect().width()/2;
     y = 425;
@@ -111,13 +112,70 @@ void GUI_View::displayGame()
 
 void GUI_View::singleplayerButtonClicked()
 {
+    game.setMode(1);
     displayGame();
+
+}
+
+void GUI_View::multiplayerButtonClicked()
+{
+    scene->clear();
+
+    //Host Button
+    MyButton *hostGameButton = new MyButton(QString("Host Game"));
+    int x = this->width()/2 - hostGameButton->boundingRect().width()/2;
+    int y = 275;
+    hostGameButton->setPos(x,y);
+    connect(hostGameButton,SIGNAL(clicked()),this,SLOT(hostButtonClicked()));//////do poprawy
+    scene->addItem(hostGameButton);
+
+    //Join Button
+    MyButton *joinGameButton = new MyButton(QString("Join Game"));
+    x = this->width()/2 - joinGameButton->boundingRect().width()/2;
+    y = 350;
+    joinGameButton->setPos(x,y);
+    //connect(singleplayerButton,SIGNAL(clicked()),this,SLOT(singleplayerButtonClicked()));//////do poprawy
+    scene->addItem(joinGameButton);
+
+    //Join Button
+    MyButton *mainMenuButton = new MyButton(QString("Back"));
+    x = this->width()/2 - mainMenuButton->boundingRect().width()/2;
+    y = 700;
+    mainMenuButton->setPos(x,y);
+    connect(mainMenuButton,SIGNAL(clicked()),this,SLOT(mainMenuButtonClicked()));
+    scene->addItem(mainMenuButton);
 
 }
 
 void GUI_View::quitButtonClicked()
 {
     exit(0);
+}
+
+void GUI_View::mainMenuButtonClicked()
+{
+    this->displayMainMenu();
+}
+
+void GUI_View::hostButtonClicked()
+{
+    scene->clear();
+
+    game.setMode(2);
+
+    //startButton
+    MyButton *startGameButton = new MyButton(QString("Start Game"));
+    int x = this->width()/2 - startGameButton->boundingRect().width()/2;
+    int y = 350;
+    startGameButton->setPos(x,y);
+    connect(startGameButton,SIGNAL(clicked()),this,SLOT(startGameButtonClicked()));//////do poprawy
+    scene->addItem(startGameButton);
+
+}
+
+void GUI_View::startGameButtonClicked()
+{
+    this->displayGame();
 }
 
 void GUI_View::updateGui()

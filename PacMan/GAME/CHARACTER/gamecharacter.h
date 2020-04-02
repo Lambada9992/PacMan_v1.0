@@ -27,6 +27,7 @@ public:
     virtual int imageState()=0;
 
     GameCharacter(Board *map);
+    virtual ~GameCharacter();
     void setNextDirection(int nextDirection);
     bool setPosition(unsigned int y,unsigned int x);
     bool setPosition(QPoint position);

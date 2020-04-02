@@ -172,17 +172,17 @@ void Gui_Board::loadImages()//brakuje empty image moze znalezc sposob aby wylacz
                  {QPixmap(":/pacman2/images/pacgreen0l.png"),QPixmap(":/pacman2/images/pacgreen1l.png"),QPixmap(":/pacman2/images/pacgreen2l.png"),QPixmap(":/pacman2/images/pacgreen3l.png")},
                  {QPixmap(":/pacman2/images/empty.png"),QPixmap(":/pacman2/images/empty.png"),QPixmap(":/pacman2/images/empty.png"),QPixmap(":/pacman2/images/empty.png")}
                 };
-    images[2] = {{QPixmap(":/pacman1/images/pac0u.png"),QPixmap(":/pacman1/images/pac1u.png"),QPixmap(":/pacman1/images/pac2u.png"),QPixmap(":/pacman1/images/pac3u.png")},
-                 {QPixmap(":/pacman1/images/pac0r.png"),QPixmap(":/pacman1/images/pac1r.png"),QPixmap(":/pacman1/images/pac2r.png"),QPixmap(":/pacman1/images/pac3r.png")},
-                 {QPixmap(":/pacman1/images/pac0d.png"),QPixmap(":/pacman1/images/pac1d.png"),QPixmap(":/pacman1/images/pac2d.png"),QPixmap(":/pacman1/images/pac3d.png")},
-                 {QPixmap(":/pacman1/images/pac0l.png"),QPixmap(":/pacman1/images/pac1l.png"),QPixmap(":/pacman1/images/pac2l.png"),QPixmap(":/pacman1/images/pac3l.png")},
-                 {QPixmap(":/pacman1/images/empty.png"),QPixmap(":/pacman1/images/empty.png"),QPixmap(":/pacman1/images/empty.png"),QPixmap(":/pacman1/images/empty.png")}
+    images[2] = {{QPixmap(":/pacman3/images/pacpurple0u.png"),QPixmap(":/pacman3/images/pacpurple1u.png"),QPixmap(":/pacman3/images/pacpurple2u.png"),QPixmap(":/pacman3/images/pacpurple3u.png")},
+                 {QPixmap(":/pacman3/images/pacpurple0r.png"),QPixmap(":/pacman3/images/pacpurple1r.png"),QPixmap(":/pacman3/images/pacpurple2r.png"),QPixmap(":/pacman3/images/pacpurple3r.png")},
+                 {QPixmap(":/pacman3/images/pacpurple0d.png"),QPixmap(":/pacman3/images/pacpurple1d.png"),QPixmap(":/pacman3/images/pacpurple2d.png"),QPixmap(":/pacman3/images/pacpurple3d.png")},
+                 {QPixmap(":/pacman3/images/pacpurple0l.png"),QPixmap(":/pacman3/images/pacpurple1l.png"),QPixmap(":/pacman3/images/pacpurple2l.png"),QPixmap(":/pacman3/images/pacpurple3l.png")},
+                 {QPixmap(":/pacman3/images/empty.png"),QPixmap(":/pacman3/images/empty.png"),QPixmap(":/pacman3/images/empty.png"),QPixmap(":/pacman3/images/empty.png")}
                 };
-    images[3] = {{QPixmap(":/pacman1/images/pac0u.png"),QPixmap(":/pacman1/images/pac1u.png"),QPixmap(":/pacman1/images/pac2u.png"),QPixmap(":/pacman1/images/pac3u.png")},
-                 {QPixmap(":/pacman1/images/pac0r.png"),QPixmap(":/pacman1/images/pac1r.png"),QPixmap(":/pacman1/images/pac2r.png"),QPixmap(":/pacman1/images/pac3r.png")},
-                 {QPixmap(":/pacman1/images/pac0d.png"),QPixmap(":/pacman1/images/pac1d.png"),QPixmap(":/pacman1/images/pac2d.png"),QPixmap(":/pacman1/images/pac3d.png")},
-                 {QPixmap(":/pacman1/images/pac0l.png"),QPixmap(":/pacman1/images/pac1l.png"),QPixmap(":/pacman1/images/pac2l.png"),QPixmap(":/pacman1/images/pac3l.png")},
-                 {QPixmap(":/pacman1/images/empty.png"),QPixmap(":/pacman1/images/empty.png"),QPixmap(":/pacman1/images/empty.png"),QPixmap(":/pacman1/images/empty.png")}
+    images[3] = {{QPixmap(":/pacman4/images/pacbrown0u.png"),QPixmap(":/pacman4/images/pacbrown1u.png"),QPixmap(":/pacman4/images/pacbrown2u.png"),QPixmap(":/pacman4/images/pacbrown3u.png")},
+                 {QPixmap(":/pacman4/images/pacbrown0r.png"),QPixmap(":/pacman4/images/pacbrown1r.png"),QPixmap(":/pacman4/images/pacbrown2r.png"),QPixmap(":/pacman4/images/pacbrown3r.png")},
+                 {QPixmap(":/pacman4/images/pacbrown0d.png"),QPixmap(":/pacman4/images/pacbrown1d.png"),QPixmap(":/pacman4/images/pacbrown2d.png"),QPixmap(":/pacman4/images/pacbrown3d.png")},
+                 {QPixmap(":/pacman4/images/pacbrown0l.png"),QPixmap(":/pacman4/images/pacbrown1l.png"),QPixmap(":/pacman4/images/pacbrown2l.png"),QPixmap(":/pacman4/images/pacbrown3l.png")},
+                 {QPixmap(":/pacman4/images/empty.png"),QPixmap(":/pacman4/images/empty.png"),QPixmap(":/pacman4/images/empty.png"),QPixmap(":/pacman4/images/empty.png")}
                 };
     images[4] = {{QPixmap(":/ghost1/images/ghostup1.png"),QPixmap(":/ghost1/images/ghostup2.png")},
                  {QPixmap(":/ghost1/images/ghostright1.png"),QPixmap(":/ghost1/images/ghostright2.png")},

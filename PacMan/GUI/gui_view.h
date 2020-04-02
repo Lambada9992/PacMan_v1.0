@@ -35,8 +35,12 @@ public://public methods
 public slots:
     //buttons slots
     void singleplayerButtonClicked();
-    //void multiplayerButtonClicked();
+    void multiplayerButtonClicked();
     void quitButtonClicked();
+    void mainMenuButtonClicked();
+    void hostButtonClicked();
+    //void joinButtonClicked();
+    void startGameButtonClicked();
 
     void updateGui();
 

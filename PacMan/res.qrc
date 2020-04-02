@@ -93,4 +93,42 @@
         <file>images/pacgreen3u.png</file>
         <file>images/empty.png</file>
     </qresource>
+    <qresource prefix="/pacman3">
+        <file>images/empty.png</file>
+        <file>images/pacpurple0d.png</file>
+        <file>images/pacpurple0l.png</file>
+        <file>images/pacpurple0r.png</file>
+        <file>images/pacpurple0u.png</file>
+        <file>images/pacpurple1d.png</file>
+        <file>images/pacpurple1l.png</file>
+        <file>images/pacpurple1r.png</file>
+        <file>images/pacpurple1u.png</file>
+        <file>images/pacpurple2d.png</file>
+        <file>images/pacpurple2l.png</file>
+        <file>images/pacpurple2r.png</file>
+        <file>images/pacpurple2u.png</file>
+        <file>images/pacpurple3d.png</file>
+        <file>images/pacpurple3l.png</file>
+        <file>images/pacpurple3r.png</file>
+        <file>images/pacpurple3u.png</file>
+    </qresource>
+    <qresource prefix="/pacman4">
+        <file>images/empty.png</file>
+        <file>images/pacbrown0d.png</file>
+        <file>images/pacbrown0l.png</file>
+        <file>images/pacbrown0r.png</file>
+        <file>images/pacbrown0u.png</file>
+        <file>images/pacbrown1d.png</file>
+        <file>images/pacbrown1l.png</file>
+        <file>images/pacbrown1r.png</file>
+        <file>images/pacbrown1u.png</file>
+        <file>images/pacbrown2d.png</file>
+        <file>images/pacbrown2l.png</file>
+        <file>images/pacbrown2r.png</file>
+        <file>images/pacbrown2u.png</file>
+        <file>images/pacbrown3d.png</file>
+        <file>images/pacbrown3l.png</file>
+        <file>images/pacbrown3r.png</file>
+        <file>images/pacbrown3u.png</file>
+    </qresource>
 </RCC>

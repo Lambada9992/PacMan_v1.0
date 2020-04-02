@@ -21,6 +21,7 @@ SOURCES += \
     GAME/CHARACTER/gamecharacter.cpp \
     GAME/CHARACTER/ghost.cpp \
     GAME/CHARACTER/myplayer.cpp \
+    GAME/CHARACTER/onlineplayer.cpp \
     GAME/CHARACTER/player.cpp \
     GAME/board.cpp \
     GAME/game.cpp \
@@ -36,6 +37,7 @@ HEADERS += \ \
     GAME/CHARACTER/gamecharacter.h \
     GAME/CHARACTER/ghost.h \
     GAME/CHARACTER/myplayer.h \
+    GAME/CHARACTER/onlineplayer.h \
     GAME/CHARACTER/player.h \
     GAME/board.h \
     GAME/game.h \

@@ -19,7 +19,7 @@ Game::Game()
     this->fearState = 0;
     this->server = nullptr;
 
-    setMode(1);//do usuniecia
+    //setMode(2);//do usuniecia
 
 
 }
@@ -45,6 +45,12 @@ void Game::setMode(unsigned int mode)
         myPlayerIndex = 0;
         players[0] = new MyPlayer(&playground);
         players[0]->setSpawnPosition(playground.getSpawnPoint(0));
+//        players[1] = new MyPlayer(&playground);
+//        players[1]->setSpawnPosition(playground.getSpawnPoint(1));
+//        players[2] = new MyPlayer(&playground);
+//        players[2]->setSpawnPosition(playground.getSpawnPoint(2));
+//        players[3] = new MyPlayer(&playground);
+//        players[3]->setSpawnPosition(playground.getSpawnPoint(3));
 
         //ghosts initialization
         ghosts[0]= new Ghost(&playground);
@@ -60,7 +66,7 @@ void Game::setMode(unsigned int mode)
         break;
     case 2:
         ////////////////////////do zmiany
-        this->mode = 0;
+        this->mode = 2;
 
         //timer initialization
         this->timer = new QTimer();
@@ -77,6 +83,18 @@ void Game::setMode(unsigned int mode)
         players[0] = new MyPlayer(&playground);
         players[0]->setSpawnPosition(playground.getSpawnPoint(0));
 
+//one ghost for now
+
+        ghosts[0]= new Ghost(&playground);
+        ghosts[0]->setSpawnPosition(playground.getSpawnPoint(4+0));
+//        ghosts[1]= new Ghost(&playground);
+//        ghosts[1]->setSpawnPosition(playground.getSpawnPoint(4+1));
+//        ghosts[2]= new Ghost(&playground);
+//        ghosts[2]->setSpawnPosition(playground.getSpawnPoint(4+2));
+//        ghosts[3]= new Ghost(&playground);
+//        ghosts[3]->setSpawnPosition(playground.getSpawnPoint(4+3));
+
+        break;
     default:
         this->mode = 0;
         break;
@@ -87,7 +105,7 @@ void Game::clear()
 {
     for(int i = 0;i<players.size();i++){
         if(players[i] != nullptr){
-            delete players[i];
+            if(dynamic_cast<OnlinePlayer *>(players[i]) == NULL)delete players[i];
             players[i] = nullptr;
         }
     }
@@ -105,6 +123,12 @@ void Game::clear()
         delete server;
         server = nullptr;
     }
+
+    this->allConectedPlayers.removeAll(nullptr);
+    for(int i =0;i<allConectedPlayers.size();i++){
+        delete allConectedPlayers[i];
+    }
+    this->allConectedPlayers.clear();
 
 }
 
@@ -182,7 +206,7 @@ void Game::colisions()
 
         for(int j =0 ;j<ghosts.size();j++){
 
-            if(ghosts[i]==nullptr)continue;
+            if(ghosts[j]==nullptr)continue;
 
             if(ghosts[j]->getIsAlive()==false)continue;
 
@@ -242,6 +266,11 @@ void Game::resetLevel()
     Ghost::isFeared = false;
 }
 
+void Game::messageAll(std::string message)
+{
+
+}
+
 void Game::onTick()
 {
 
@@ -278,6 +307,14 @@ void Game::cancelFear()
 
 void Game::newConnection()
 {
+    this->allConectedPlayers.append(new OnlinePlayer(server->nextPendingConnection(),&playground));
 
+//    for(int i = 0;i<players.size();i++){
+//        if(players[i]==nullptr){
+//            players[i] = allConectedPlayers[allConectedPlayers.size()-1];
+//            players[i]->setSpawnPosition(this->playground.getSpawnPoint(i));
+//            break;
+//        }
+//    }
 }
 
