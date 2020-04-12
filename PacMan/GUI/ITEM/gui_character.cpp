@@ -35,7 +35,6 @@ Gui_Character::Gui_Character(GameCharacter *character,QVector<QVector<QPixmap>> 
     connect(&timer,SIGNAL(timeout()),this,SLOT(onTick()));
     timer.start();
 
-
 }
 
 Gui_Character::~Gui_Character()
@@ -45,6 +44,9 @@ Gui_Character::~Gui_Character()
 
 void Gui_Character::updatePosition()
 {
+    //    qDebug()<<"legia 123";
+    //    if(character==nullptr)qDebug()<<"legia";
+
     QPointF nextPosition(boardPosition.rx()+character->getPosition().rx()*scale-(extrapixel/2),boardPosition.ry()+character->getPosition().ry()*scale-(extrapixel/2));
     if(this->pos() - nextPosition == QPointF(0,0)){
         this->isMoving = false;
@@ -54,9 +56,9 @@ void Gui_Character::updatePosition()
 
 
     if(((this->pos().rx()-nextPosition.rx())*(this->pos().rx()-nextPosition.rx())) + ((this->pos().ry()-nextPosition.ry())*(this->pos().ry()-nextPosition.ry())) < scale*scale*4){
-    this->animation->setStartValue(this->pos());
-    this->animation->setEndValue(nextPosition);
-    animation->start();
+        this->animation->setStartValue(this->pos());
+        this->animation->setEndValue(nextPosition);
+        animation->start();
     }else{
         setPos(nextPosition);
     }

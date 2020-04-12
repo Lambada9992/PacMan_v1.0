@@ -5,8 +5,11 @@
 #include "GUI/ITEM/mybutton.h"
 
 
-#include <QKeyEvent>
+
 #include <QDebug>
+#include <QRegExpValidator>
+#include <QTextEdit>
+#include <QTimer>
 
 
 GUI_View::GUI_View(QWidget *parent) : QGraphicsView(parent)
@@ -27,6 +30,7 @@ GUI_View::GUI_View(QWidget *parent) : QGraphicsView(parent)
     this->displayMainMenu();
 
     connect(&this->game,SIGNAL(update()),this,SLOT(updateGui()));
+    connect(&game,SIGNAL(hostStartedGame()),this,SLOT(displayGame()));
 
 
 }
@@ -102,11 +106,15 @@ void GUI_View::displayGame()
     this->setBackgroundBrush(QBrush(Qt::white,Qt::SolidPattern));
 
     board = new Gui_Board(50,50,25,this->game);
-    connect(this,SIGNAL(updateCharacters()),board,SLOT(updateCharacters()));
+    board->setFlag(QGraphicsItem::ItemIsFocusable);
+    board->setFocus();
+
+    //board->setFocus();
+    connect(this,SIGNAL(updateCharacters(Game *)),board,SLOT(updateCharacters(Game *)));
     scene->addItem(board);
 
     //game start
-    game.start();
+    //game.start();
 
 }
 
@@ -114,6 +122,9 @@ void GUI_View::singleplayerButtonClicked()
 {
     game.setMode(1);
     displayGame();
+
+    QTimer::singleShot(2000,&game,SLOT(start()));
+    //game.start();
 
 }
 
@@ -134,10 +145,10 @@ void GUI_View::multiplayerButtonClicked()
     x = this->width()/2 - joinGameButton->boundingRect().width()/2;
     y = 350;
     joinGameButton->setPos(x,y);
-    //connect(singleplayerButton,SIGNAL(clicked()),this,SLOT(singleplayerButtonClicked()));//////do poprawy
+    connect(joinGameButton,SIGNAL(clicked()),this,SLOT(joinButtonClicked()));//////do poprawy
     scene->addItem(joinGameButton);
 
-    //Join Button
+    //mainMenu Button
     MyButton *mainMenuButton = new MyButton(QString("Back"));
     x = this->width()/2 - mainMenuButton->boundingRect().width()/2;
     y = 700;
@@ -171,33 +182,89 @@ void GUI_View::hostButtonClicked()
     connect(startGameButton,SIGNAL(clicked()),this,SLOT(startGameButtonClicked()));//////do poprawy
     scene->addItem(startGameButton);
 
+    //mainMenu Button
+    MyButton *mainMenuButton = new MyButton(QString("Back"));
+    x = this->width()/2 - mainMenuButton->boundingRect().width()/2;
+    y = 700;
+    mainMenuButton->setPos(x,y);
+    connect(mainMenuButton,SIGNAL(clicked()),this,SLOT(mainMenuButtonClicked()));
+    scene->addItem(mainMenuButton);
+
+}
+
+void GUI_View::joinButtonClicked()
+{
+    scene->clear();
+
+    game.setMode(3);
+
+    //lineedit box
+    lineEditBox = new QLineEdit();
+    int xsize=125,ysize=50;
+
+    int x = this->width()/4 - xsize/2;
+    int y = 300;
+    lineEditBox->setGeometry(x,y,xsize,ysize);
+    lineEditBox->setValidator( new QRegExpValidator(QRegExp("[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}")) );
+    lineEditBox->setPlaceholderText("192.168.100.100");
+    lineEditBox->setFocus();
+    scene->addWidget(lineEditBox);
+
+    //connect button
+    MyButton *connectButton = new MyButton(QString("Connect"));
+    x = this->width()/4 - connectButton->boundingRect().width()/2;
+    y = 400;
+    connectButton->setPos(x,y);
+    connect(connectButton,SIGNAL(clicked()),this,SLOT(connetButtonClicked()));
+    scene->addItem(connectButton);
+
+    //Player/Spectator button
+    MyButton *playerSpectatorButton = new MyButton(QString("Player/Spectator"));
+    x = (3*this->width()/4) - playerSpectatorButton->boundingRect().width()/2;
+    y = 400;
+    playerSpectatorButton->setPos(x,y);
+    connect(playerSpectatorButton,SIGNAL(clicked()),this,SLOT(playerSpectatorButtonClicked()));
+    scene->addItem(playerSpectatorButton);
+
+
+    // back button
+    MyButton *mainMenuButton = new MyButton(QString("Back"));
+    x = this->width()/2 - mainMenuButton->boundingRect().width()/2;
+    y = 700;
+    mainMenuButton->setPos(x,y);
+    connect(mainMenuButton,SIGNAL(clicked()),this,SLOT(mainMenuButtonClicked()));
+    scene->addItem(mainMenuButton);
+
+
+}
+
+void GUI_View::connetButtonClicked()
+{
+    if(lineEditBox==nullptr)return;
+    game.connectToHost(lineEditBox->text());
+}
+
+void GUI_View::playerSpectatorButtonClicked()
+{
+    if(game.getIsOnlineParticipant()){
+        game.playerSpectatorRequest(false);
+    }else{
+        game.playerSpectatorRequest(true);
+    }
+
 }
 
 void GUI_View::startGameButtonClicked()
 {
+    game.setIsLiveAlready();
+    game.sendInitState();
     this->displayGame();
+    QTimer::singleShot(2000,&game,SLOT(start()));
 }
 
 void GUI_View::updateGui()
 {
-    emit updateCharacters();
+    emit updateCharacters(&game);
 
 }
 
-void GUI_View::keyPressEvent(QKeyEvent *event)
-{
-    switch(event->key()){
-    case Qt::Key_Up:
-        game.myPlayerControl(1);
-        break;
-    case Qt::Key_Right:
-        game.myPlayerControl(2);
-        break;
-    case Qt::Key_Down:
-        game.myPlayerControl(3);
-        break;
-    case Qt::Key_Left:
-        game.myPlayerControl(4);
-        break;
-    }
-}

@@ -7,6 +7,7 @@
 #include <QObject>
 #include "GAME/CHARACTER/ghost.h"
 #include <QTcpServer>
+#include <QTcpSocket>
 #include "GAME/CHARACTER/onlineplayer.h"
 
 class Game : public QObject
@@ -18,6 +19,7 @@ public:
 private:
     unsigned int mode;
     QTimer *timer;
+    int timerInterval;
     unsigned int myPlayerIndex;
     QVector<Player *> players;
     QVector<Ghost *> ghosts;
@@ -25,10 +27,13 @@ private:
     unsigned int fearTime;
     unsigned int fearState;
 
-    //online var
+    //online var HOST
     QTcpServer *server;
     QList<OnlinePlayer *> allConectedPlayers;
-
+    //online var JOIN
+    QTcpSocket *socket;
+    unsigned int connectionState; //0 not connected , 1 - connecting, 2 - connected
+    bool isOnlineParticipant;
 
 
     //METHODS
@@ -37,11 +42,14 @@ public://public methods
     ~Game();
 
     void setMode(unsigned int mode);
+    void setIsLiveAlready();
+public slots:
     void start();
     void stop();
     void myPlayerControl(int direction);
 
 
+public:
     GameCharacter *character(unsigned int index);
     unsigned int amountOfChracters();
     int getTimerInterval();
@@ -54,14 +62,37 @@ private:
     bool isAnyPlayerAlive();
     void resetLevel();
     //online methods
-    void messageAll(std::string message);
+
+    QString getInitStateOnline();
+    void setInitStateOnline(QString initState);
+    QString getStateOnline();
+    void setStateOnline(QString state);
+    void interpretOnlineComand(QString command);
+
+public:
+    bool getIsOnlineParticipant();
+    void playerSpectatorRequest(bool status);
+    void sendInitState();
+    void sendStatePacket();
+
 
 public slots:
     void onTick();
     void cancelFear();
     void newConnection();
+    void onlinePlayerJoin(qintptr socketDescriptor);
+    void onlinePlayerRemove(qintptr socketDescriptor);
+    void onlinePlayerDelete(qintptr socketDescriptor);
+    void connectToHost(QString ip,qint16 port = 1234);// czy napewno slot
+
+    //join
+    void readyRead();
+    void disconnected();
 signals:
+    void messageAll(QByteArray message);
+    void hostStartedGame();
     void update();
+    void updateGui();//do podłączenia
 
 };
 

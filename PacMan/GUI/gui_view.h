@@ -4,6 +4,7 @@
 #include <QGraphicsView>
 #include "GUI/ITEM/gui_board.h"
 #include "GAME/game.h"
+#include <QLineEdit>
 
 
 class GUI_View : public QGraphicsView
@@ -17,6 +18,7 @@ private:
     Gui_Board *board;
 
 
+    QLineEdit *lineEditBox;
 
 
     //METHODS
@@ -27,26 +29,31 @@ public://public methods
 
     //display methods
     void displayMainMenu();
-    void displayGame();
+
 
     //keyboard
-    void keyPressEvent(QKeyEvent *event);
+    //void keyPressEvent(QKeyEvent *event);
 
 public slots:
+    void displayGame();
     //buttons slots
     void singleplayerButtonClicked();
     void multiplayerButtonClicked();
     void quitButtonClicked();
     void mainMenuButtonClicked();
+
     void hostButtonClicked();
-    //void joinButtonClicked();
+    void joinButtonClicked();
+    void connetButtonClicked();
+    void playerSpectatorButtonClicked();
     void startGameButtonClicked();
+
 
     void updateGui();
 
 signals:
     void directionFromKey(int);
-    void updateCharacters();
+    void updateCharacters(Game *);
 
 };
 

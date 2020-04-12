@@ -17,6 +17,7 @@ void Board::setMap(unsigned int index)
     switch(index){
     case 1:
         this->resizeMap(31,28);
+        mapIndex =1;
         this->obstacleMap = {
             {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
             {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},

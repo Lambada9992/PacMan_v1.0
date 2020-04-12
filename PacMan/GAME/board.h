@@ -10,7 +10,7 @@ class Board
 
     //VAR
 private:
-    unsigned int mapSizeX,mapSizeY;
+    unsigned int mapSizeX,mapSizeY,mapIndex;
     QVector<QVector<unsigned int>> obstacleMap;
     QVector<QVector<unsigned int>> bonusMap;
     unsigned int bonusLeft;
@@ -32,6 +32,7 @@ private://private methods
 public://getery i setery
     unsigned int getMapSizeY(){return mapSizeY;}
     unsigned int getMapSizeX(){return mapSizeX;}
+    unsigned int getMapIndex(){return mapIndex;}
     unsigned int getObstacleMap(unsigned int i,unsigned int j){return obstacleMap[i][j];}
     unsigned int getBonusMap(unsigned int i,unsigned int j){return bonusMap[i][j];}
     unsigned int collectBonus(unsigned int i,unsigned int j);

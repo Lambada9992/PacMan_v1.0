@@ -4,12 +4,14 @@
 #include <QDebug>
 #include <QPainter>
 #include <QGraphicsEllipseItem>
+#include <QKeyEvent>
 
 
 Gui_Board::Gui_Board(int x, int y, unsigned int scale,Game &game, QGraphicsItem *parent) : QGraphicsRectItem(parent)
 {
     //position, size, theme
     this->position = QPointF(x,y);
+    connect(this,SIGNAL(playerControl(int)),&game,SLOT(myPlayerControl(int)));
 
     setRect(x,y,game.playground.getMapSizeX()*scale,game.playground.getMapSizeY()*scale);
     QBrush brush;
@@ -34,6 +36,24 @@ Gui_Board::~Gui_Board()
 {
     for(int i = 0;i<this->playersAndGhosts.size();i++){
         if(playersAndGhosts[i]!= nullptr)delete playersAndGhosts[i];
+    }
+}
+
+void Gui_Board::keyPressEvent(QKeyEvent *event)
+{
+    switch(event->key()){
+    case Qt::Key_Up:
+        emit playerControl(1);
+        break;
+    case Qt::Key_Right:
+        emit playerControl(2);
+        break;
+    case Qt::Key_Down:
+        emit playerControl(3);
+        break;
+    case Qt::Key_Left:
+        emit playerControl(4);
+        break;
     }
 }
 
@@ -215,20 +235,22 @@ void Gui_Board::loadImages()//brakuje empty image moze znalezc sposob aby wylacz
 
 }
 
-void Gui_Board::updateCharacters()
+void Gui_Board::updateCharacters(Game *game)
 {
+
     for(int i = 0;i< this->playersAndGhosts.size();i++){
         if(playersAndGhosts[i]!= nullptr){
-            playersAndGhosts[i]->updatePosition();
-            if(playersAndGhosts[i]->isCollectingCoins()){
-                if(this->bonusMap[playersAndGhosts[i]->getCharacterPosition().ry()][playersAndGhosts[i]->getCharacterPosition().rx()]!= nullptr){
-                    delete this->bonusMap[playersAndGhosts[i]->getCharacterPosition().ry()][playersAndGhosts[i]->getCharacterPosition().rx()];
-                    this->bonusMap[playersAndGhosts[i]->getCharacterPosition().ry()][playersAndGhosts[i]->getCharacterPosition().rx()]=nullptr;
+            if(game->character(i)!=nullptr){
+                playersAndGhosts[i]->updatePosition();
+                if(playersAndGhosts[i]->isCollectingCoins()){
+                    if(this->bonusMap[playersAndGhosts[i]->getCharacterPosition().ry()][playersAndGhosts[i]->getCharacterPosition().rx()]!= nullptr){
+                        delete this->bonusMap[playersAndGhosts[i]->getCharacterPosition().ry()][playersAndGhosts[i]->getCharacterPosition().rx()];
+                        this->bonusMap[playersAndGhosts[i]->getCharacterPosition().ry()][playersAndGhosts[i]->getCharacterPosition().rx()]=nullptr;
+                    }
                 }
             }
 
         }
-
 
     }
 }

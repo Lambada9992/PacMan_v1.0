@@ -11,7 +11,14 @@ OnlinePlayer::OnlinePlayer(QTcpSocket *socket,Board * map,QObject *parent) : QOb
 
 OnlinePlayer::~OnlinePlayer()
 {
+    socket->deleteLater();
+}
 
+void OnlinePlayer::message(QByteArray message)
+{
+ socket->write(message);
+ socket->waitForBytesWritten(2000);
+ socket->flush();
 }
 
 qintptr OnlinePlayer::getSocketDescriptor()
@@ -24,18 +31,22 @@ void OnlinePlayer::readyRead()
     QString pom = socket->readAll();
     qDebug() << pom;
 
-    if(pom == "w")this->setNextDirection(1);
-    if(pom == "d")this->setNextDirection(2);
-    if(pom == "s")this->setNextDirection(3);
-    if(pom == "a")this->setNextDirection(4);
 
+    if(pom == "w"){this->setNextDirection(1);return;}
+    if(pom == "d"){this->setNextDirection(2);return;}
+    if(pom == "s"){this->setNextDirection(3);return;}
+    if(pom == "a"){this->setNextDirection(4);return;}
+
+    if(pom == "j"){emit join(this->socketDesriptor);return;}
+    if(pom == "r"){emit remove(this->socketDesriptor);return;}
+    if(pom == "f"){emit deletePlayer(this->socketDesriptor);return;}
 
 }
 
 void OnlinePlayer::disconnected()
 {
-    qDebug() << "disconnected";
     isConnected = false;
-    socket->deleteLater();
+    socket->close();
+    emit deletePlayer(socketDesriptor);
 
 }

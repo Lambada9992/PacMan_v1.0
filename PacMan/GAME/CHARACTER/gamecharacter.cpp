@@ -73,6 +73,21 @@ bool GameCharacter::setSpawnPosition(QPoint position)
     return true;
 }
 
+void GameCharacter::setIsAlive(unsigned int isAlive)
+{
+    this->isAlive = isAlive;
+}
+
+void GameCharacter::setDirection(unsigned int direction)
+{
+    this->direction = direction;
+}
+
+unsigned int GameCharacter::getDirection()
+{
+    return this->direction;
+}
+
 void GameCharacter::resurect()
 {
     isAlive = true;

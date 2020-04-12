@@ -32,6 +32,10 @@ public:
     bool setPosition(unsigned int y,unsigned int x);
     bool setPosition(QPoint position);
     bool setSpawnPosition(QPoint position);
+    void setIsAlive(unsigned int isAlive);
+
+    void setDirection(unsigned int);
+    unsigned int getDirection();
 
     QPoint getPosition();
     bool getIsAlive();

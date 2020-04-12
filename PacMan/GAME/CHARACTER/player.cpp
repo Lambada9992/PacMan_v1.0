@@ -58,7 +58,22 @@ void Player::kill()
     this->isAlive = false;
 }
 
+void Player::setLife(unsigned int life)
+{
+    this->life = life;
+}
+
+void Player::setScore(unsigned int score)
+{
+    this->score = score;
+}
+
 unsigned int Player::getLife()
 {
     return this->life;
+}
+
+unsigned int Player::getScore()
+{
+    return this->score;
 }

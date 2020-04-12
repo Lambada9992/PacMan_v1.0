@@ -27,6 +27,7 @@ private:
 public:
     explicit Gui_Board(int x,int y,unsigned int scale,Game &game, QGraphicsItem *parent = nullptr);
     ~Gui_Board();
+    void keyPressEvent(QKeyEvent *event);
 
 private:
     void initObstacle(Game &game);
@@ -34,7 +35,10 @@ private:
     void initPlayersAndGhosts(Game &game);
     void loadImages();
 public slots:
-    void updateCharacters();
+    void updateCharacters(Game *);
+
+signals:
+    void  playerControl(int direction);
 
 };
 

@@ -15,12 +15,16 @@ protected:
     //METHODS
 public:
     Player(Board *map);
-    ~Player();
+    virtual ~Player();
 
     int imageState() override;
     bool collectBonuses();// return true if collected fearing bonus
     void kill();
+    void setLife(unsigned int life);
+
+    void setScore(unsigned int score);
     unsigned int getLife();
+    unsigned int getScore();
 
 
 
