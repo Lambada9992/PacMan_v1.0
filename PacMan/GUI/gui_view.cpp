@@ -10,7 +10,7 @@
 #include <QRegExpValidator>
 #include <QTextEdit>
 #include <QTimer>
-
+#include "Gui/ITEM/scoretable.h"
 
 GUI_View::GUI_View(QWidget *parent) : QGraphicsView(parent)
 {
@@ -29,6 +29,8 @@ GUI_View::GUI_View(QWidget *parent) : QGraphicsView(parent)
     //display mainmenu
     this->displayMainMenu();
 
+    this->scoreTable = nullptr;
+
     connect(&this->game,SIGNAL(update()),this,SLOT(updateGui()));
     connect(&game,SIGNAL(hostStartedGame()),this,SLOT(displayGame()));
 
@@ -39,6 +41,7 @@ GUI_View::~GUI_View()
 {
 
     delete scene;
+
 }
 
 void GUI_View::displayMainMenu()
@@ -96,6 +99,34 @@ void GUI_View::displayMainMenu()
 
 }
 
+void GUI_View::updateScoreTable()
+{
+    if(scoreTable == nullptr)return;
+    if(game.getIsLive()==false)return;
+    QString result = QString("SCORE TABLE:\n");
+
+    for(int i=0;i<4;i++){
+        if(game.getPlayerScoreText(i).length()!=0){
+            if(i==0){
+                result +="YELLOW ";
+            }else if(i==1){
+                result +="GREEN ";
+            }else if(i==2){
+                result +="PURPLE ";
+            }else if(i==3){
+                result +="BROWN ";
+            }
+            result +=game.getPlayerScoreText(i);
+            result+= "\n";
+        }
+    }
+
+    scoreTable->setPlainText(result);
+
+
+
+}
+
 void GUI_View::displayGame()
 {
     if(scene == nullptr)return;
@@ -103,18 +134,22 @@ void GUI_View::displayGame()
     //clearing
     scene->clear();
 
-    this->setBackgroundBrush(QBrush(Qt::white,Qt::SolidPattern));
+    this->setBackgroundBrush(QBrush(Qt::darkGray,Qt::SolidPattern));
 
     board = new Gui_Board(50,50,25,this->game);
     board->setFlag(QGraphicsItem::ItemIsFocusable);
     board->setFocus();
 
-    //board->setFocus();
     connect(this,SIGNAL(updateCharacters(Game *)),board,SLOT(updateCharacters(Game *)));
     scene->addItem(board);
 
-    //game start
-    //game.start();
+    scoreTable = new QGraphicsTextItem(QString(""));
+    QFont titleFont("comic sans",10,QFont::Bold);
+    scoreTable->setFont(titleFont);
+    int x = (this->width()/2 - scoreTable->boundingRect().width()/2)*(3.0/2.0);
+    int y = 100;
+    scoreTable->setPos(x,y);
+    scene->addItem(scoreTable);
 
 }
 
@@ -124,7 +159,6 @@ void GUI_View::singleplayerButtonClicked()
     displayGame();
 
     QTimer::singleShot(2000,&game,SLOT(start()));
-    //game.start();
 
 }
 
@@ -265,6 +299,8 @@ void GUI_View::startGameButtonClicked()
 void GUI_View::updateGui()
 {
     emit updateCharacters(&game);
+    updateScoreTable();
+
 
 }
 

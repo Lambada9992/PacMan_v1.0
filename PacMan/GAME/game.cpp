@@ -50,12 +50,6 @@ void Game::setMode(unsigned int mode)
         myPlayerIndex = 0;
         players[0] = new MyPlayer(&playground);
         players[0]->setSpawnPosition(playground.getSpawnPoint(0));
-//                players[1] = new MyPlayer(&playground);
-//                players[1]->setSpawnPosition(playground.getSpawnPoint(1));
-//                players[2] = new MyPlayer(&playground);
-//                players[2]->setSpawnPosition(playground.getSpawnPoint(2));
-//                players[3] = new MyPlayer(&playground);
-//                players[3]->setSpawnPosition(playground.getSpawnPoint(3));
 
         //ghosts initialization
         ghosts[0]= new Ghost(&playground);
@@ -236,7 +230,8 @@ void Game::makeMoves()
 
     for(int i =0;i<ghosts.size();i++){
         if(ghosts[i]!=nullptr){
-            ghosts[i]->randomNextDirection();
+            ghosts[i]->setPlayersPositions(players);
+            ghosts[i]->setNextMove();
             ghosts[i]->move();
         }
     }
@@ -297,6 +292,26 @@ bool Game::isAnyPlayerAlive()
 int Game::getTimerInterval()
 {
     return this->timerInterval;
+}
+
+QString Game::getPlayerScoreText(const unsigned int playerIndex)
+{
+    QString result = QString("");
+    if(playerIndex>=players.size())return result;
+    if(players[playerIndex]==nullptr)return result;
+    result += "Life: ";
+    result += QString::number(players[playerIndex]->getLife());
+    result += "  Score: ";
+    result += QString::number(players[playerIndex]->getScore());
+    result += "  ";
+    if(players[playerIndex]->getIsAlive()==false){result += "DEAD";}
+
+    return result;
+}
+
+bool Game::getIsLive()
+{
+    return this->isLive;
 }
 
 void Game::resetLevel()

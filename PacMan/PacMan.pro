@@ -20,6 +20,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     GAME/CHARACTER/gamecharacter.cpp \
     GAME/CHARACTER/ghost.cpp \
+    GAME/CHARACTER/mybucket.cpp \
     GAME/CHARACTER/myplayer.cpp \
     GAME/CHARACTER/onlineplayer.cpp \
     GAME/CHARACTER/player.cpp \
@@ -30,12 +31,14 @@ SOURCES += \
     GUI/ITEM/mybonus.cpp \
     GUI/ITEM/mybutton.cpp \
     GUI/ITEM/myobstacle.cpp \
+    GUI/ITEM/scoretable.cpp \
     GUI/gui_view.cpp \
     main.cpp
 
 HEADERS += \ \
     GAME/CHARACTER/gamecharacter.h \
     GAME/CHARACTER/ghost.h \
+    GAME/CHARACTER/mybucket.h \
     GAME/CHARACTER/myplayer.h \
     GAME/CHARACTER/onlineplayer.h \
     GAME/CHARACTER/player.h \
@@ -46,6 +49,7 @@ HEADERS += \ \
     GUI/ITEM/mybonus.h \
     GUI/ITEM/mybutton.h \
     GUI/ITEM/myobstacle.h \
+    GUI/ITEM/scoretable.h \
     GUI/gui_view.h \
     game.h
 

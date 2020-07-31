@@ -14,6 +14,9 @@ Gui_Character::Gui_Character(GameCharacter *character,QVector<QVector<QPixmap>> 
     this->animation = new QPropertyAnimation(this,"pos");
     this->isMoving = false;
     this->animation->setDuration(this->timerInterval-this->timerInterval/5);
+    //
+    //this->animationLastTime = 0;
+    //this->animationTimer.start();
 
     for(int i=0;i<this->images.size();i++){
         for(int j = 0; j < this->images[i].size();j++){
@@ -44,8 +47,14 @@ Gui_Character::~Gui_Character()
 
 void Gui_Character::updatePosition()
 {
-    //    qDebug()<<"legia 123";
-    //    if(character==nullptr)qDebug()<<"legia";
+//    if(animationLastTime == 0){
+//        animationTimer.start();
+//        qDebug () << "start";
+//    }
+    //qDebug () << animationTimer.elapsed();
+    //this->animation->setDuration((animationTimer.nsecsElapsed()-animationLastTime));
+    //this->animationLastTime = animationTimer.nsecsElapsed();
+    //qDebug () << (animationTimer.elapsed()-animationLastTime);
 
     QPointF nextPosition(boardPosition.rx()+character->getPosition().rx()*scale-(extrapixel/2),boardPosition.ry()+character->getPosition().ry()*scale-(extrapixel/2));
     if(this->pos() - nextPosition == QPointF(0,0)){

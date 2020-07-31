@@ -7,6 +7,7 @@
 #include <QTimer>
 #include <QPropertyAnimation>
 #include <QObject>
+#include <QElapsedTimer>
 
 
 class Gui_Character : public QObject,public QGraphicsPixmapItem
@@ -28,6 +29,9 @@ class Gui_Character : public QObject,public QGraphicsPixmapItem
     bool isMoving;
     bool CollectingCoins;
 
+    //for animation 20.07.2020
+   // QElapsedTimer animationTimer;
+    //qint64 animationLastTime;
 
 
 

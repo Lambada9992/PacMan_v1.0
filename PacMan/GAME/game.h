@@ -53,6 +53,8 @@ public:
     GameCharacter *character(unsigned int index);
     unsigned int amountOfChracters();
     int getTimerInterval();
+    QString getPlayerScoreText(unsigned const int playerIndex);
+    bool getIsLive();
 
 private:
     void makeMoves();

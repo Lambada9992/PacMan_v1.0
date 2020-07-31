@@ -16,6 +16,7 @@ private:
     QGraphicsScene *scene;
     Game game;
     Gui_Board *board;
+    QGraphicsTextItem *scoreTable;
 
 
     QLineEdit *lineEditBox;
@@ -29,6 +30,7 @@ public://public methods
 
     //display methods
     void displayMainMenu();
+    void updateScoreTable();
 
 
     //keyboard
