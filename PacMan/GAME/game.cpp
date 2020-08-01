@@ -23,9 +23,6 @@ Game::Game()
     this->connectionState = 0;
     this->isOnlineParticipant = false;
 
-    //setMode(2);//do usuniecia
-
-
 }
 
 Game::~Game()
@@ -107,12 +104,17 @@ void Game::setMode(unsigned int mode)
         break;
     default:
         this->mode = 0;
+
         break;
     }
 }
 
 void Game::clear()
 {
+    //map clear
+    playground.setMap(1);
+    //
+
     for(int i = 0;i<players.size();i++){
         if(players[i] != nullptr){
             if(dynamic_cast<OnlinePlayer *>(players[i]) == NULL)delete players[i];
@@ -144,6 +146,8 @@ void Game::clear()
         socket->deleteLater();
         socket = nullptr;
     }
+
+
 
 }
 

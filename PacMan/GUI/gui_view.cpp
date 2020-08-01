@@ -143,13 +143,24 @@ void GUI_View::displayGame()
     connect(this,SIGNAL(updateCharacters(Game *)),board,SLOT(updateCharacters(Game *)));
     scene->addItem(board);
 
+    //score table
     scoreTable = new QGraphicsTextItem(QString(""));
-    QFont titleFont("comic sans",10,QFont::Bold);
+    QFont titleFont("comic sans",8,QFont::Bold);
     scoreTable->setFont(titleFont);
     int x = (this->width()/2 - scoreTable->boundingRect().width()/2)*(3.0/2.0);
     int y = 100;
     scoreTable->setPos(x,y);
     scene->addItem(scoreTable);
+
+    //main menu button
+    MyButton *mainMenuButton = new MyButton(QString("Main Menu"));
+    x = (this->width()/2 - mainMenuButton->boundingRect().width()/2)*2 - 40;
+    y = 700;
+    mainMenuButton->setPos(x,y);
+    connect(mainMenuButton,SIGNAL(clicked()),this,SLOT(mainMenuButtonClicked()));
+    scene->addItem(mainMenuButton);
+
+
 
 }
 

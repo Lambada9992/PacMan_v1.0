@@ -1,6 +1,7 @@
 #include "ghost.h"
 #include <QDebug>
 #include "GAME/CHARACTER/mybucket.h"
+#include "GAME/CHARACTER/mybucket.cpp"
 
 bool Ghost::isFeared = false;
 
@@ -65,39 +66,49 @@ void Ghost::setPlayersPositions(const QVector<Player *> players)
 void Ghost::setNextMove()
 {
 
-    if(Ghost::isFeared){
+    if(Ghost::isFeared==false && this->position == this->spawnPosition){
+        this->resurect();
+    }
+
+    if(Ghost::isFeared && (this->getIsAlive()==true)){
         this->randomNextDirection();
     }else{
-        //randome move TO DELETE!!!
-        this->randomNextDirection();
+        if(this->getIsAlive()==true){
+            //finding closest player
+            QPoint closestPlayer = QPoint(-1,-1);
 
-        //finding closest player
-        QPoint closestPlayer = QPoint(-1,-1);
-        int distClosestPlayer;
-        for(int i = 0 ;i<playersPositions.size();i++){
-            if(playersPositions[i]!=QPoint(-1,-1)){
-                if(closestPlayer == QPoint(-1,-1)){
-                    closestPlayer = playersPositions[i];
-                    distClosestPlayer = (this->position.rx()-closestPlayer.rx())*(this->position.rx()-closestPlayer.rx());
-                    distClosestPlayer += (this->position.ry()-closestPlayer.ry())*(this->position.ry()-closestPlayer.ry());
-                }else{
-                    int distCurrent = (this->position.rx()-playersPositions[i].rx())*(this->position.rx()-playersPositions[i].rx());
-                    if(distCurrent < distClosestPlayer){
+            int distClosestPlayer;
+            for(int i = 0 ;i<playersPositions.size();i++){
+                if(playersPositions[i]!=QPoint(-1,-1)){
+                    if(closestPlayer == QPoint(-1,-1)){
                         closestPlayer = playersPositions[i];
-                        distClosestPlayer = distCurrent;
+                        distClosestPlayer = (this->position.rx()-closestPlayer.rx())*(this->position.rx()-closestPlayer.rx());
+                        distClosestPlayer += (this->position.ry()-closestPlayer.ry())*(this->position.ry()-closestPlayer.ry());
+                    }else{
+                        int distCurrent = (this->position.rx()-playersPositions[i].rx())*(this->position.rx()-playersPositions[i].rx());
+                        if(distCurrent < distClosestPlayer){
+                            closestPlayer = playersPositions[i];
+                            distClosestPlayer = distCurrent;
+                        }
                     }
                 }
             }
-        }
-        //if ther is no players
-        if(closestPlayer == QPoint(-1,-1)){this->randomNextDirection();return;}
+            //if ther is no players
+            if(closestPlayer == QPoint(-1,-1)){
+                this->randomNextDirection();
+                return;
+            }
 
-        //set path to closest player
-        this->generetePathToPoint(closestPlayer);
+
+            //set path to closest player or spawn point
+            this->generetePathToPoint(closestPlayer);
+        }else{
+            this->generetePathToPoint(this->spawnPosition);
+        }
 
         if(path.size()!=0){
-        this->nextDirection = path[0];
-        path.pop_front();
+            this->nextDirection = path[0];
+            path.pop_front();
         }
 
 
@@ -269,9 +280,14 @@ void Ghost::generetePathToPoint(QPoint destination)
 
         }
 
+        if(path.size() == 0){
+            this->nextDirection = 0;
+            this->direction = 0;
+        }
 
     }else{
-        this->nextDirection = 0;//zatrzymanie duszka
+        this->nextDirection = 0;
+        this->direction = 0;
     }
 
 
