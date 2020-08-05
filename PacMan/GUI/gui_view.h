@@ -5,6 +5,7 @@
 #include "GUI/ITEM/gui_board.h"
 #include "GAME/game.h"
 #include <QLineEdit>
+#include "GUI/ITEM/mybutton.h"
 
 
 class GUI_View : public QGraphicsView
@@ -17,9 +18,11 @@ private:
     Game game;
     Gui_Board *board;
     QGraphicsTextItem *scoreTable;
-
-
+    QGraphicsTextItem *connectStatusText,*connectionModeText;
+    QGraphicsTextItem *playersOnlineText,*spectatorOnlineText;
     QLineEdit *lineEditBox;
+    MyButton *restartGameButton;
+
 
 
     //METHODS
@@ -32,10 +35,6 @@ public://public methods
     void displayMainMenu();
     void updateScoreTable();
 
-
-    //keyboard
-    //void keyPressEvent(QKeyEvent *event);
-
 public slots:
     void displayGame();
     //buttons slots
@@ -43,6 +42,7 @@ public slots:
     void multiplayerButtonClicked();
     void quitButtonClicked();
     void mainMenuButtonClicked();
+    void restartButtonClicked();
 
     void hostButtonClicked();
     void joinButtonClicked();
@@ -52,6 +52,9 @@ public slots:
 
 
     void updateGui();
+    void updateGuiItems();
+
+    void clearItems();
 
 signals:
     void directionFromKey(int);

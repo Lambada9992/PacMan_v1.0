@@ -42,10 +42,12 @@ public://public methods
     ~Game();
 
     void setMode(unsigned int mode);
+    unsigned int getMode();
     void setIsLiveAlready();
 public slots:
     void start();
     void stop();
+    void restart();
     void myPlayerControl(int direction);
 
 
@@ -55,12 +57,12 @@ public:
     int getTimerInterval();
     QString getPlayerScoreText(unsigned const int playerIndex);
     bool getIsLive();
+    bool ended();
 
 private:
     void makeMoves();
     void colisions();
     void clear();
-    bool ended();
     bool isAnyPlayerAlive();
     void resetLevel();
     //online methods
@@ -73,6 +75,9 @@ private:
 
 public:
     bool getIsOnlineParticipant();
+    int getConnectionState();
+    int getPLayerAmount();
+    int getSpectatorAmount();
     void playerSpectatorRequest(bool status);
     void sendInitState();
     void sendStatePacket();
@@ -94,7 +99,7 @@ signals:
     void messageAll(QByteArray message);
     void hostStartedGame();
     void update();
-    void updateGui();//do podłączenia
+    void updateGui();
 
 };
 

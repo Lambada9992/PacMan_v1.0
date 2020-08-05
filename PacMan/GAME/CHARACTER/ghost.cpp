@@ -53,11 +53,17 @@ void Ghost::randomNextDirection()
     this->setNextDirection(1+rand()%4);
 }
 
-void Ghost::setPlayersPositions(const QVector<Player *> players)
+void Ghost::setPlayersPositions(const QVector<Player *>& players)
 {
     for(int i = 0;i<players.size();i++){
         if(players[i]!=nullptr){
-            this->playersPositions[i] = players[i]->getPosition();
+            if(players[i]->getIsAlive()){
+                this->playersPositions[i] = players[i]->getPosition();
+            }else{
+                this->playersPositions[i] = QPoint(-1,-1);
+            }
+        }else{
+            this->playersPositions[i] = QPoint(-1,-1);
         }
     }
 
@@ -162,7 +168,6 @@ void Ghost::generetePathToPoint(QPoint destination)
     }
 
     MyBucket<Node> openSet;
-    QList<Node> closedSet;
 
     Node initNode;
     initNode.g = 0;
@@ -182,7 +187,7 @@ void Ghost::generetePathToPoint(QPoint destination)
             break; //reconstruct path
         }
 
-        closedSet.append(pom);
+
         visitMap[pom.position.ry()][pom.position.rx()] = true;
         parentMap[pom.position.ry()][pom.position.rx()] = pom.parentPosition;
 

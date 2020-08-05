@@ -37,6 +37,7 @@ private:
 public slots:
     void updateCharacters(Game *);
 
+
 signals:
     void  playerControl(int direction);
 

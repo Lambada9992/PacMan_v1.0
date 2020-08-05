@@ -28,11 +28,7 @@ class Gui_Character : public QObject,public QGraphicsPixmapItem
     QPropertyAnimation *animation;
     bool isMoving;
     bool CollectingCoins;
-
-    //for animation 20.07.2020
-   // QElapsedTimer animationTimer;
-    //qint64 animationLastTime;
-
+    bool lastIsAliveStatus;
 
 
     //METHODS
@@ -42,6 +38,7 @@ public:
     void  updatePosition();
     QPoint getCharacterPosition();
     bool isCollectingCoins(){return CollectingCoins;}
+    qint64 getSocketDescriptor();
 
 public slots:
     void onTick();

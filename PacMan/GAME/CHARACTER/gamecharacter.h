@@ -4,8 +4,10 @@
 #include <QPoint>
 #include "GAME/board.h"
 
+
 class GameCharacter
 {
+
     //VAR
 protected:
     Board *map;
@@ -39,6 +41,8 @@ public:
 
     QPoint getPosition();
     bool getIsAlive();
+
+
 
 };
 

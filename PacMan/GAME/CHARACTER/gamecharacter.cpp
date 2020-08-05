@@ -268,5 +268,8 @@ QPoint GameCharacter::getPosition()
 
 bool GameCharacter::getIsAlive()
 {
- return this->isAlive;
+    return this->isAlive;
 }
+
+
+

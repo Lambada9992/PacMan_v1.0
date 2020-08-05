@@ -3,20 +3,20 @@
 
 Gui_Character::Gui_Character(GameCharacter *character,QVector<QVector<QPixmap>> images,unsigned int scale,int timerInterval,QPointF boardPosition,QGraphicsItem *parent,QObject *pom) : QObject(pom), QGraphicsPixmapItem(parent)
 {
+    character->imageState();
     this->boardPosition = boardPosition;
     this->scale = scale;
     this->extrapixel = scale/3;
     this->images = images;
     this->character = character;
+    this->lastIsAliveStatus = character->getIsAlive();
     this->currentImage = 0;
     this->increaseImageIndex = true;
     this->timerInterval = timerInterval;
     this->animation = new QPropertyAnimation(this,"pos");
     this->isMoving = false;
     this->animation->setDuration(this->timerInterval-this->timerInterval/5);
-    //
-    //this->animationLastTime = 0;
-    //this->animationTimer.start();
+
 
     for(int i=0;i<this->images.size();i++){
         for(int j = 0; j < this->images[i].size();j++){
@@ -47,14 +47,6 @@ Gui_Character::~Gui_Character()
 
 void Gui_Character::updatePosition()
 {
-//    if(animationLastTime == 0){
-//        animationTimer.start();
-//        qDebug () << "start";
-//    }
-    //qDebug () << animationTimer.elapsed();
-    //this->animation->setDuration((animationTimer.nsecsElapsed()-animationLastTime));
-    //this->animationLastTime = animationTimer.nsecsElapsed();
-    //qDebug () << (animationTimer.elapsed()-animationLastTime);
 
     QPointF nextPosition(boardPosition.rx()+character->getPosition().rx()*scale-(extrapixel/2),boardPosition.ry()+character->getPosition().ry()*scale-(extrapixel/2));
     if(this->pos() - nextPosition == QPointF(0,0)){
@@ -78,18 +70,25 @@ QPoint Gui_Character::getCharacterPosition()
     return this->character->getPosition();
 }
 
+
 void Gui_Character::onTick()
 {
-    if(!isMoving)return;
-    int nextImageIndex;
+
+
+    if(!isMoving && (character->getIsAlive()==lastIsAliveStatus))return;
+    lastIsAliveStatus = character->getIsAlive();
+    int nextImageIndex = currentImage;
     if(increaseImageIndex){
         nextImageIndex = ++this->currentImage;
-        if(nextImageIndex == images[character->imageState()].size()-1)increaseImageIndex = false;
+        if(nextImageIndex == images[character->imageState()].size()-1)
+        //if(nextImageIndex == images[0].size()-1)
+            increaseImageIndex = false;
     }else{
         nextImageIndex = --this->currentImage;
         if(nextImageIndex == 0)increaseImageIndex = true;
     }
     this->setPixmap(this->images[character->imageState()][nextImageIndex]);
+    //this->setPixmap(this->images[0][nextImageIndex]);
     this->currentImage = nextImageIndex;
 
 }

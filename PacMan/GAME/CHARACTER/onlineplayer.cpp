@@ -11,7 +11,7 @@ OnlinePlayer::OnlinePlayer(QTcpSocket *socket,Board * map,QObject *parent) : QOb
 
 OnlinePlayer::~OnlinePlayer()
 {
-    socket->deleteLater();
+    //socket->deleteLater();
 }
 
 void OnlinePlayer::message(QByteArray message)
@@ -26,11 +26,14 @@ qintptr OnlinePlayer::getSocketDescriptor()
     return this->socketDesriptor;
 }
 
+bool OnlinePlayer::getIsConnected()
+{
+    return this->isConnected;
+}
+
 void OnlinePlayer::readyRead()
 {
     QString pom = socket->readAll();
-    qDebug() << pom;
-
 
     if(pom == "w"){this->setNextDirection(1);return;}
     if(pom == "d"){this->setNextDirection(2);return;}
@@ -46,7 +49,6 @@ void OnlinePlayer::readyRead()
 void OnlinePlayer::disconnected()
 {
     isConnected = false;
-    socket->close();
     emit deletePlayer(socketDesriptor);
 
 }

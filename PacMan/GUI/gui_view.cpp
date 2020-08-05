@@ -2,7 +2,7 @@
 
 #include <QGraphicsSimpleTextItem>
 
-#include "GUI/ITEM/mybutton.h"
+
 
 
 
@@ -29,9 +29,14 @@ GUI_View::GUI_View(QWidget *parent) : QGraphicsView(parent)
     //display mainmenu
     this->displayMainMenu();
 
-    this->scoreTable = nullptr;
+    scoreTable = nullptr;
+    connectStatusText = nullptr;
+    connectionModeText = nullptr;
+    playersOnlineText = nullptr;
+    spectatorOnlineText = nullptr;
 
     connect(&this->game,SIGNAL(update()),this,SLOT(updateGui()));
+    connect(&this->game,SIGNAL(updateGui()),this,SLOT(updateGuiItems()));
     connect(&game,SIGNAL(hostStartedGame()),this,SLOT(displayGame()));
 
 
@@ -50,7 +55,7 @@ void GUI_View::displayMainMenu()
     game.setMode(0);
 
     //clearing
-    scene->clear();
+    scene->clear();clearItems();
 
     //bg patern and color
     this->setBackgroundBrush(QBrush(Qt::darkGray,Qt::SolidPattern));
@@ -132,7 +137,7 @@ void GUI_View::displayGame()
     if(scene == nullptr)return;
 
     //clearing
-    scene->clear();
+    scene->clear();clearItems();
 
     this->setBackgroundBrush(QBrush(Qt::darkGray,Qt::SolidPattern));
 
@@ -169,13 +174,15 @@ void GUI_View::singleplayerButtonClicked()
     game.setMode(1);
     displayGame();
 
-    QTimer::singleShot(2000,&game,SLOT(start()));
+    QTimer::singleShot(1000,&game,SLOT(start()));
 
 }
 
 void GUI_View::multiplayerButtonClicked()
 {
-    scene->clear();
+    if(scene ==nullptr)return;
+
+    scene->clear();clearItems();
 
     //Host Button
     MyButton *hostGameButton = new MyButton(QString("Host Game"));
@@ -213,16 +220,42 @@ void GUI_View::mainMenuButtonClicked()
     this->displayMainMenu();
 }
 
+void GUI_View::restartButtonClicked()
+{
+    game.restart();
+    restartGameButton = nullptr;
+}
+
 void GUI_View::hostButtonClicked()
 {
-    scene->clear();
+    if(scene == nullptr)return;
+
+    scene->clear();clearItems();
 
     game.setMode(2);
 
+    //connectStatusText
+    playersOnlineText = new QGraphicsTextItem(QString("Online Players: 0"));
+    QFont titleFont("comic sans",20,QFont::Bold);
+    playersOnlineText->setFont(titleFont);
+    int x = this->width()/2 - playersOnlineText->boundingRect().width()/2;
+    int y = 100;
+    playersOnlineText->setPos(x,y);
+    scene->addItem(playersOnlineText);
+
+    //spectatorOnlineText
+    spectatorOnlineText = new QGraphicsTextItem(QString("Spectators: 0"));
+    titleFont = QFont("comic sans",20,QFont::Bold);
+    spectatorOnlineText->setFont(titleFont);
+    x = this->width()/2 - spectatorOnlineText->boundingRect().width()/2;
+    y = 200;
+    spectatorOnlineText->setPos(x,y);
+    scene->addItem(spectatorOnlineText);
+
     //startButton
     MyButton *startGameButton = new MyButton(QString("Start Game"));
-    int x = this->width()/2 - startGameButton->boundingRect().width()/2;
-    int y = 350;
+    x = this->width()/2 - startGameButton->boundingRect().width()/2;
+    y = 350;
     startGameButton->setPos(x,y);
     connect(startGameButton,SIGNAL(clicked()),this,SLOT(startGameButtonClicked()));//////do poprawy
     scene->addItem(startGameButton);
@@ -239,7 +272,9 @@ void GUI_View::hostButtonClicked()
 
 void GUI_View::joinButtonClicked()
 {
-    scene->clear();
+    if(scene ==nullptr)return;
+
+    scene->clear();clearItems();
 
     game.setMode(3);
 
@@ -271,6 +306,23 @@ void GUI_View::joinButtonClicked()
     connect(playerSpectatorButton,SIGNAL(clicked()),this,SLOT(playerSpectatorButtonClicked()));
     scene->addItem(playerSpectatorButton);
 
+    //connectStatusText
+    connectStatusText = new QGraphicsTextItem(QString("Not Connected"));
+    QFont titleFont("comic sans",20,QFont::Bold);
+    connectStatusText->setFont(titleFont);
+    x = this->width()/2 - connectStatusText->boundingRect().width()/2 - 200;
+    y = 100;
+    connectStatusText->setPos(x,y);
+    scene->addItem(connectStatusText);
+
+    //connectionModeText
+    connectionModeText = new QGraphicsTextItem(QString(""));
+    titleFont = QFont("comic sans",20,QFont::Bold);
+    connectionModeText->setFont(titleFont);
+    x = this->width()/2 - connectionModeText->boundingRect().width()/2 +200;
+    y = 100;
+    connectionModeText->setPos(x,y);
+    scene->addItem(connectionModeText);
 
     // back button
     MyButton *mainMenuButton = new MyButton(QString("Back"));
@@ -310,8 +362,73 @@ void GUI_View::startGameButtonClicked()
 void GUI_View::updateGui()
 {
     emit updateCharacters(&game);
-    updateScoreTable();
+    if(scoreTable)updateScoreTable();
+    //
+
+}
+
+void GUI_View::updateGuiItems()
+{
+    //multiplayer join screen
+    if(connectStatusText){
+        if(game.getConnectionState()==0){
+           connectStatusText->setPlainText(QString("NOT CONNECTED"));
+           connectStatusText->setDefaultTextColor(QColor(Qt::red));
+        }else if(game.getConnectionState()==2){
+           connectStatusText->setPlainText(QString("CONNNECTED"));
+           connectStatusText->setDefaultTextColor(QColor(Qt::green));
+        }else if(game.getConnectionState()==1){
+            connectStatusText->setPlainText(QString("CONNNECTING ..."));
+            connectStatusText->setDefaultTextColor(QColor(Qt::yellow));
+        }
+    }
+
+    if(connectionModeText){
+        if(game.getConnectionState()==2){
+            if(game.getIsOnlineParticipant()){
+                connectionModeText->setPlainText("Mode: Player");
+            }else{
+                connectionModeText->setPlainText("Mode: Spectator");
+            }
+        }else{
+            connectionModeText->setPlainText("");
+        }
+    }
+    if(playersOnlineText){
+        QString pom("Online Players: ");
+        pom+=QString::number(game.getPLayerAmount());
+        playersOnlineText->setPlainText(pom);
+    }
+    if(spectatorOnlineText){
+        QString pom("Spectators: ");
+        pom+=QString::number(game.getSpectatorAmount());
+        spectatorOnlineText->setPlainText(pom);
+    }
+
+    if(game.ended() && game.getMode()!=0 && game.getMode()!=3){
+        if(this->restartGameButton==nullptr){
+
+            //restart button add
+            restartGameButton = new MyButton(QString("Restart"));
+            int x = (this->width()/2 - restartGameButton->boundingRect().width()/2)*2 - 40;
+            int y = 600;
+            restartGameButton->setPos(x,y);
+            connect(restartGameButton,SIGNAL(clicked()),this,SLOT(restartButtonClicked()));
+            scene->addItem(restartGameButton);
+        }
+    }
 
 
+    //check if ther is any gamecharacter to delete
+
+}
+
+void GUI_View::clearItems()
+{
+    scoreTable = nullptr;
+    connectStatusText = nullptr;
+    connectionModeText = nullptr;
+    playersOnlineText = nullptr;
+    spectatorOnlineText = nullptr;
 }
 

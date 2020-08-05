@@ -19,11 +19,11 @@ public:
     Ghost(Board *map);
     ~Ghost();
 
-    void kill();
-
     int imageState() override;
+
+    void kill();
     void randomNextDirection();
-    void setPlayersPositions(const QVector<Player *> players);
+    void setPlayersPositions(const QVector<Player *>& players);
     void setNextMove();
 
 private:

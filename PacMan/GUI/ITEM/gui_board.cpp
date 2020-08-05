@@ -29,7 +29,6 @@ Gui_Board::Gui_Board(int x, int y, unsigned int scale,Game &game, QGraphicsItem 
     loadImages();
     initPlayersAndGhosts(game);
 
-
 }
 
 Gui_Board::~Gui_Board()
@@ -254,3 +253,4 @@ void Gui_Board::updateCharacters(Game *game)
 
     }
 }
+

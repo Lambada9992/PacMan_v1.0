@@ -109,6 +109,11 @@ void Game::setMode(unsigned int mode)
     }
 }
 
+unsigned int Game::getMode()
+{
+    return this->mode;
+}
+
 void Game::clear()
 {
     //map clear
@@ -157,9 +162,11 @@ bool Game::ended()
 
     for(int i =0;i<players.size();i++){
         if(players[i]!=nullptr){
-            if(players[i]->getIsAlive()==true)return false;;
+            if(players[i]->getLife()>0)return false;;
         }
     }
+
+
 
     return true;
 
@@ -213,6 +220,38 @@ void Game::stop()
     if(mode==0)return;
     this->isLive = false;
     timer->stop();
+}
+
+void Game::restart()
+{
+    stop();
+    playground.setMap(playground.getMapIndex());
+    if(this->mode == 2)this->sendInitState();
+
+    //reset players
+    for(int i =0;i<players.size();i++){
+        if(players[i]){
+            players[i]->goSpawn();
+            players[i]->setLife(3);
+            players[i]->setScore(0);
+            players[i]->setIsAlive(true);
+            players[i]->setDirection(0);
+            players[i]->setNextDirection(0);
+        }
+    }
+    //reset ghosts
+    Ghost::isFeared = false;
+    for(int i =0;i<ghosts.size();i++){
+        if(ghosts[i]){
+            ghosts[i]->goSpawn();
+            ghosts[i]->resurect();
+            ghosts[i]->setDirection(0);
+            ghosts[i]->setNextDirection(0);
+        }
+    }
+    emit hostStartedGame();
+
+    QTimer::singleShot(1000,this,SLOT(start()));
 }
 
 void Game::makeMoves()
@@ -341,7 +380,6 @@ QString Game::getInitStateOnline()
 
     result.append("%M;");
     result.append(std::to_string(playground.getMapIndex()).c_str());
-    //result.append(";");
 
     result.append("%T;");
     result.append(std::to_string(this->getTimerInterval()).c_str());
@@ -403,7 +441,6 @@ void Game::setInitStateOnline(QString initState)
 
     //
     initState.replace("init","");
-    //initState = initState.mid(4);///////////////////////////to check
     QStringList pom = initState.split('%');
     for(int i =0;i<pom.length();i++){
         interpretOnlineComand(pom[i]);
@@ -535,6 +572,33 @@ bool Game::getIsOnlineParticipant()
     return isOnlineParticipant;
 }
 
+int Game::getConnectionState()
+{
+    return connectionState;
+}
+
+int Game::getPLayerAmount()
+{
+    int value = 0;
+    for(int i = 0;i<players.size();i++ ){
+        if(players[i]!=nullptr){
+            value++;
+        }
+    }
+    return  value - 1;
+}
+
+int Game::getSpectatorAmount()
+{
+    int value = 0;
+    for(int i = 0;i<allConectedPlayers.size();i++ ){
+        if(allConectedPlayers[i]!=nullptr){
+            value++;
+        }
+    }
+    return value-getPLayerAmount();
+}
+
 void Game::playerSpectatorRequest(bool status)
 {
     if(socket!=nullptr){
@@ -567,13 +631,14 @@ void Game::onTick()
 {
 
     makeMoves();
-    emit update();
     if(mode==2){sendStatePacket();}
+    emit update();
 
     if(playground.isAllBonusCollected()){
         this->stop();
         //go to next level
         emit update();
+        emit updateGui();
 
 
     }
@@ -583,6 +648,7 @@ void Game::onTick()
         if(!isAnyPlayerAlive()){
             this->stop();
             emit update();
+            emit updateGui();
         }
     }
 
@@ -608,6 +674,7 @@ void Game::newConnection()
     connect(pom,SIGNAL(deletePlayer(qintptr)),this,SLOT(onlinePlayerDelete(qintptr)));
     connect(this,SIGNAL(messageAll(QByteArray)),pom,SLOT(message(QByteArray)));
     this->allConectedPlayers.append(pom);
+    emit updateGui();
 
 }
 
@@ -639,39 +706,47 @@ void Game::onlinePlayerJoin(qintptr socketDescriptor)
             players[i] = requestingPlayer;
             players[i]->setSpawnPosition(this->playground.getSpawnPoint(i));
             requestingPlayer->message("join accept");
-            return;
+            break;
         }
     }
+    emit updateGui();
 }
 
 void Game::onlinePlayerRemove(qintptr socketDescriptor)
 {
+    if(isLive)return;
+
     for(int i = 0;i<players.size();i++){
         OnlinePlayer *pom=dynamic_cast<OnlinePlayer *>(players[i]);
         if(pom!=NULL){
             if(pom->getSocketDescriptor()==socketDescriptor){
-                pom->message("remove accept");//to delete
+                if(pom[i].getIsConnected())pom->message("remove accept");
                 players[i] = nullptr;
             }
         }
     }
+    emit updateGui();
 }
 
 void Game::onlinePlayerDelete(qintptr socketDescriptor)
 {
+
+    if(isLive)return;
     this->onlinePlayerRemove(socketDescriptor);
 
     for(int i = 0;i<allConectedPlayers.size();i++){
         if(allConectedPlayers[i] == nullptr)continue;
 
         if(allConectedPlayers[i]->getSocketDescriptor()==socketDescriptor){
-            allConectedPlayers[i]->message("delete");//to delete
+            if(allConectedPlayers[i]->getIsConnected())
+                allConectedPlayers[i]->message("delete");
             delete allConectedPlayers[i];
             allConectedPlayers[i] = nullptr;
             allConectedPlayers.removeAll(nullptr);
 
         }
     }
+    emit updateGui();
 }
 
 void Game::connectToHost(QString ip, qint16 port)
@@ -686,12 +761,15 @@ void Game::connectToHost(QString ip, qint16 port)
     if(socket->state()==QTcpSocket::ConnectedState){
         socket->close();
     }
-    socket->connectToHost(ip,port);
+
     connectionState = 1;
     emit updateGui();
+
+    socket->connectToHost(ip,port);
+
     this->isOnlineParticipant = false;
 
-    if(socket->waitForConnected(5000)){
+    if(socket->waitForConnected(3000)){
         connectionState = 2;
         emit updateGui();
     }else{
@@ -704,7 +782,6 @@ void Game::readyRead()
 {
     QString pom;
     pom = socket->readAll();
-    qDebug() << pom;
 
     if(pom.mid(0,5)=="state"){this->setStateOnline(pom);emit update();return;}
     if(pom=="join accept"){this->isOnlineParticipant=true;emit updateGui();return;}

@@ -23,6 +23,7 @@ public:
 
     //getery
     qintptr getSocketDescriptor();
+    bool getIsConnected();
 
 
 public slots:
