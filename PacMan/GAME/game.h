@@ -9,6 +9,7 @@
 #include <QTcpServer>
 #include <QTcpSocket>
 #include "GAME/CHARACTER/onlineplayer.h"
+#include "GAME/soundmanager.h"
 
 class Game : public QObject
 {
@@ -35,6 +36,12 @@ private:
     unsigned int connectionState; //0 not connected , 1 - connecting, 2 - connected
     bool isOnlineParticipant;
 
+    //Sound
+    SoundManager *sound;
+signals:
+    void soundManagerInterface(int type,bool on=false);
+
+
 
     //METHODS
 public://public methods
@@ -47,7 +54,7 @@ public://public methods
 public slots:
     void start();
     void stop();
-    void restart();
+    void restartGame();
     void myPlayerControl(int direction);
 
 

@@ -22,6 +22,8 @@ Game::Game()
     this->socket = nullptr;
     this->connectionState = 0;
     this->isOnlineParticipant = false;
+    this->sound = &SoundManager::get();
+
 
 }
 
@@ -45,20 +47,23 @@ void Game::setMode(unsigned int mode)
 
         //MyPlayer Initialization
         myPlayerIndex = 0;
-        players[0] = new MyPlayer(&playground);
+        players[0] = new MyPlayer(&playground,sound);
         players[0]->setSpawnPosition(playground.getSpawnPoint(0));
 
         //ghosts initialization
         ghosts[0]= new Ghost(&playground);
         ghosts[0]->setSpawnPosition(playground.getSpawnPoint(4+0));
+        ghosts[0]->setMode(0);
         ghosts[1]= new Ghost(&playground);
+        ghosts[1]->setMode(1);
         ghosts[1]->setSpawnPosition(playground.getSpawnPoint(4+1));
         ghosts[2]= new Ghost(&playground);
+        ghosts[2]->setMode(2);
         ghosts[2]->setSpawnPosition(playground.getSpawnPoint(4+2));
         ghosts[3]= new Ghost(&playground);
+        ghosts[3]->setMode(2);
         ghosts[3]->setSpawnPosition(playground.getSpawnPoint(4+3));
 
-        //qDebug() << this->getInitStateOnline().toUtf8();
 
 
         break;
@@ -79,10 +84,10 @@ void Game::setMode(unsigned int mode)
         server->listen(QHostAddress::Any,1234);
 
         myPlayerIndex = 0;
-        players[0] = new MyPlayer(&playground);
+        players[0] = new MyPlayer(&playground,sound);
         players[0]->setSpawnPosition(playground.getSpawnPoint(0));
 
-        //one ghost for now
+        //ghosts initialization
 
         ghosts[0]= new Ghost(&playground);
         ghosts[0]->setSpawnPosition(playground.getSpawnPoint(4+0));
@@ -119,6 +124,7 @@ void Game::clear()
     //map clear
     playground.setMap(1);
     //
+    this->isLive = false;
 
     for(int i = 0;i<players.size();i++){
         if(players[i] != nullptr){
@@ -212,21 +218,23 @@ void Game::start()
 {
     if(mode==0)return;
     this->isLive = true;
-    timer->start();
+    if(timer!=nullptr)timer->start();
+    this->sound->playGameSound(true);
+    if(mode == 1 || mode == 2)Ghost::setPlayersPositions(players);
 }
 
 void Game::stop()
 {
     if(mode==0)return;
     this->isLive = false;
-    timer->stop();
+    if(timer!=nullptr)timer->stop();
+    this->sound->playGameSound(false);
 }
 
-void Game::restart()
+void Game::restartGame()
 {
     stop();
     playground.setMap(playground.getMapIndex());
-    if(this->mode == 2)this->sendInitState();
 
     //reset players
     for(int i =0;i<players.size();i++){
@@ -249,9 +257,12 @@ void Game::restart()
             ghosts[i]->setNextDirection(0);
         }
     }
+
+    if(this->mode == 2)this->sendInitState();
+
     emit hostStartedGame();
 
-    QTimer::singleShot(1000,this,SLOT(start()));
+    QTimer::singleShot(4000,this,SLOT(start()));
 }
 
 void Game::makeMoves()
@@ -273,7 +284,6 @@ void Game::makeMoves()
 
     for(int i =0;i<ghosts.size();i++){
         if(ghosts[i]!=nullptr){
-            ghosts[i]->setPlayersPositions(players);
             ghosts[i]->setNextMove();
             ghosts[i]->move();
         }
@@ -302,6 +312,8 @@ void Game::colisions()
             if(Ghost::isFeared == false){
                 players[i]->kill();
             }else{
+                players[i]->soundPlayer(4);
+                players[i]->setScore(players[i]->getScore()+10);
                 ghosts[j]->kill();
             }
 
@@ -361,7 +373,12 @@ void Game::resetLevel()
 {
     for(int i = 0; i<players.size();i++){
         if(players[i]==nullptr)continue;
-        if(players[i]->getLife()>0){players[i]->resurect();}
+        if(players[i]->getLife()>0){
+            players[i]->resurect();
+            players[i]->setNextDirection(0);
+            players[i]->setDirection(0);
+
+        }
     }
 
     for(int i = 0 ;i<ghosts.size();i++){
@@ -507,6 +524,8 @@ void Game::setStateOnline(QString state)
     for(int i =0;i<pom.length();i++){
         interpretOnlineComand(pom[i]);
     }
+
+
 }
 
 void Game::interpretOnlineComand(QString command)
@@ -516,7 +535,7 @@ void Game::interpretOnlineComand(QString command)
     if(var[0]=="P"){
         int index = std::stoi(var[1].toStdString());
         players[index]->setPosition(std::stoi(var[3].toStdString()),std::stoi(var[2].toStdString()));
-        players[index]->setSpawnPosition(players[index]->getPosition());
+        players[index]->setSpawnPosition(players[index]->getPosition());////////???????????????????????????????????????
         players[index]->setLife(std::stoi(var[4].toStdString()));
         players[index]->setScore(std::stoi(var[5].toStdString()));
         players[index]->setIsAlive(std::stoi(var[6].toStdString()));
@@ -547,7 +566,7 @@ void Game::interpretOnlineComand(QString command)
     if(var[0]=="NP"){
 
         int index = std::stoi(var[1].toStdString());
-        players[index] = new Player(&playground);
+        players[index] = new Player(&playground,sound);
         players[index]->setPosition(std::stoi(var[3].toStdString()),std::stoi(var[2].toStdString()));
         players[index]->setSpawnPosition(players[index]->getPosition());
         players[index]->setLife(std::stoi(var[4].toStdString()));
@@ -563,6 +582,12 @@ void Game::interpretOnlineComand(QString command)
         ghosts[index]->setSpawnPosition(ghosts[index]->getPosition());
         ghosts[index]->setIsAlive(std::stoi(var[4].toStdString()));
         return;
+    }
+    if(var[0]=="S"){
+        if(var[1] == '1')sound->playCoinCollectSound();
+        if(var[2] == '1')sound->playBonusCollectSound();
+        if(var[3] == '1')sound->playDieSound();
+        if(var[4] == '1')sound->playEatGhostSound();
     }
 
 }
@@ -643,16 +668,21 @@ void Game::onTick()
 
     }
 
+    static QTimer singleShot(this);
+    singleShot.setSingleShot(true);
+    connect(&singleShot,SIGNAL(timeout()),this,SLOT(start()));
+
     if(!isAnyPlayerAlive()){
+        this->stop();
         resetLevel();
+        singleShot.start(1000);
         if(!isAnyPlayerAlive()){
+            singleShot.stop();
             this->stop();
             emit update();
             emit updateGui();
         }
     }
-
-
 
 }
 
@@ -668,7 +698,7 @@ void Game::cancelFear()
 
 void Game::newConnection()
 {
-    OnlinePlayer *pom = new OnlinePlayer(server->nextPendingConnection(),&playground);
+    OnlinePlayer *pom = new OnlinePlayer(server->nextPendingConnection(),&playground,sound);
     connect(pom,SIGNAL(join(qintptr)),this,SLOT(onlinePlayerJoin(qintptr)));
     connect(pom,SIGNAL(remove(qintptr)),this,SLOT(onlinePlayerRemove(qintptr)));
     connect(pom,SIGNAL(deletePlayer(qintptr)),this,SLOT(onlinePlayerDelete(qintptr)));
@@ -681,6 +711,7 @@ void Game::newConnection()
 void Game::onlinePlayerJoin(qintptr socketDescriptor)
 {
     if(this->isLive == true) return;
+
     OnlinePlayer *requestingPlayer = nullptr;
 
     for(int i = 0;i<allConectedPlayers.size();i++){
@@ -696,7 +727,10 @@ void Game::onlinePlayerJoin(qintptr socketDescriptor)
         if(players[i]!=nullptr){
             OnlinePlayer *pom = dynamic_cast<OnlinePlayer *>(players[i]);
             if(pom!= NULL){
-                if(pom->getSocketDescriptor()==socketDescriptor)return;
+                if(pom->getSocketDescriptor()==socketDescriptor){
+                    requestingPlayer->message("join accept");
+                    return;
+                }
             }
         }
     }
@@ -715,15 +749,28 @@ void Game::onlinePlayerJoin(qintptr socketDescriptor)
 void Game::onlinePlayerRemove(qintptr socketDescriptor)
 {
     if(isLive)return;
-
     for(int i = 0;i<players.size();i++){
         OnlinePlayer *pom=dynamic_cast<OnlinePlayer *>(players[i]);
         if(pom!=NULL){
             if(pom->getSocketDescriptor()==socketDescriptor){
-                if(pom[i].getIsConnected())pom->message("remove accept");
+                    pom->message("remove accept");
                 players[i] = nullptr;
+                emit updateGui();
+                return;
             }
         }
+    }
+
+    OnlinePlayer *requestingPlayer = nullptr;
+
+    for(int i = 0;i<allConectedPlayers.size();i++){
+        if(allConectedPlayers[i]->getSocketDescriptor()==socketDescriptor){
+            requestingPlayer = allConectedPlayers[i];
+            break;
+        }
+    }
+    if(requestingPlayer){
+        requestingPlayer->message("remove accept");
     }
     emit updateGui();
 }
@@ -782,8 +829,16 @@ void Game::readyRead()
 {
     QString pom;
     pom = socket->readAll();
+    qDebug() << pom;
 
     if(pom.mid(0,5)=="state"){this->setStateOnline(pom);emit update();return;}
+    if(pom.mid(0,1)=="S"){
+        if(pom.mid(1,1)== "1")this->sound->playCoinCollectSound();
+        if(pom.mid(1,1)== "2")this->sound->playBonusCollectSound();
+        if(pom.mid(1,1)== "3")this->sound->playDieSound();
+        if(pom.mid(1,1)== "4")this->sound->playEatGhostSound();
+
+    }
     if(pom=="join accept"){this->isOnlineParticipant=true;emit updateGui();return;}
     if(pom=="remove accept"){this->isOnlineParticipant=false;emit updateGui();return;}
     if(pom.mid(0,4)=="init"){this->setInitStateOnline(pom);emit hostStartedGame();return;}

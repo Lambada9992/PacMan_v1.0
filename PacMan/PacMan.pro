@@ -1,5 +1,7 @@
-QT       += core gui
+QT       += core gui #multimedia network
+QT       += multimedia
 QT       += network
+
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -26,12 +28,12 @@ SOURCES += \
     GAME/CHARACTER/player.cpp \
     GAME/board.cpp \
     GAME/game.cpp \
+    GAME/soundmanager.cpp \
     GUI/ITEM/gui_board.cpp \
     GUI/ITEM/gui_character.cpp \
     GUI/ITEM/mybonus.cpp \
     GUI/ITEM/mybutton.cpp \
     GUI/ITEM/myobstacle.cpp \
-    GUI/ITEM/scoretable.cpp \
     GUI/gui_view.cpp \
     main.cpp
 
@@ -44,12 +46,12 @@ HEADERS += \ \
     GAME/CHARACTER/player.h \
     GAME/board.h \
     GAME/game.h \
+    GAME/soundmanager.h \
     GUI/ITEM/gui_board.h \
     GUI/ITEM/gui_character.h \
     GUI/ITEM/mybonus.h \
     GUI/ITEM/mybutton.h \
     GUI/ITEM/myobstacle.h \
-    GUI/ITEM/scoretable.h \
     GUI/gui_view.h \
     game.h
 

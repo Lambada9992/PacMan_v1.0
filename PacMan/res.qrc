@@ -131,4 +131,12 @@
         <file>images/pacbrown3r.png</file>
         <file>images/pacbrown3u.png</file>
     </qresource>
+    <qresource prefix="/sounds">
+        <file>sounds/CoinSound.wav</file>
+        <file>sounds/BeginningSound.wav</file>
+        <file>sounds/DieSound.wav</file>
+        <file>sounds/EatGhostSound.wav</file>
+        <file>sounds/GameSound.wav</file>
+        <file>sounds/BonusSound.wav</file>
+    </qresource>
 </RCC>

@@ -8,18 +8,20 @@
 class OnlinePlayer :public QObject, public Player
 {
     Q_OBJECT
-
+private:
     //var
     QTcpSocket *socket;
     qintptr socketDesriptor;
     bool isConnected;
+    QVector<bool> soundsToPlay;
 
 
     //methods
 public:
-    OnlinePlayer(QTcpSocket *socket,Board *map,QObject *parent = nullptr);
+    OnlinePlayer(QTcpSocket *socket,Board *map,SoundManager *sound,QObject *parent = nullptr);
     ~OnlinePlayer();
 
+    virtual void soundPlayer(int i) override;
 
     //getery
     qintptr getSocketDescriptor();

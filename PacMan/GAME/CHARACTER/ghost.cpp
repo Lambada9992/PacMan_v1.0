@@ -4,13 +4,15 @@
 #include "GAME/CHARACTER/mybucket.cpp"
 
 bool Ghost::isFeared = false;
+QVector<GameCharacter *> Ghost::m_players;
 
-Ghost::Ghost(Board *map) : GameCharacter(map)
+Ghost::Ghost(Board *map) : GameCharacter(map),
+    m_mode(2)
 {
     //init players position
-    playersPositions.resize(4);
+    m_players.resize(4);
     for(int i =0;i<4;i++){
-        playersPositions[i] = QPoint(-1,-1);
+        m_players[i] = nullptr;
     }
 }
 
@@ -50,21 +52,25 @@ int Ghost::imageState()
 
 void Ghost::randomNextDirection()
 {
-    this->setNextDirection(1+rand()%4);
+
+    unsigned int _nextDirection = 1+rand()%4;
+    if(direction==0) this->setNextDirection(_nextDirection);
+    if(_nextDirection==direction)return; //setNextDirection(direction);
+    if((_nextDirection+direction)%2 == 0){
+        if(howManyWays()!=1)
+            randomNextDirection();
+        else
+            this->setNextDirection(_nextDirection);
+    }else{
+        this->setNextDirection(_nextDirection);
+    }
+
 }
 
 void Ghost::setPlayersPositions(const QVector<Player *>& players)
 {
     for(int i = 0;i<players.size();i++){
-        if(players[i]!=nullptr){
-            if(players[i]->getIsAlive()){
-                this->playersPositions[i] = players[i]->getPosition();
-            }else{
-                this->playersPositions[i] = QPoint(-1,-1);
-            }
-        }else{
-            this->playersPositions[i] = QPoint(-1,-1);
-        }
+        m_players[i] = players[i];
     }
 
 }
@@ -80,34 +86,22 @@ void Ghost::setNextMove()
         this->randomNextDirection();
     }else{
         if(this->getIsAlive()==true){
-            //finding closest player
-            QPoint closestPlayer = QPoint(-1,-1);
 
-            int distClosestPlayer;
-            for(int i = 0 ;i<playersPositions.size();i++){
-                if(playersPositions[i]!=QPoint(-1,-1)){
-                    if(closestPlayer == QPoint(-1,-1)){
-                        closestPlayer = playersPositions[i];
-                        distClosestPlayer = (this->position.rx()-closestPlayer.rx())*(this->position.rx()-closestPlayer.rx());
-                        distClosestPlayer += (this->position.ry()-closestPlayer.ry())*(this->position.ry()-closestPlayer.ry());
-                    }else{
-                        int distCurrent = (this->position.rx()-playersPositions[i].rx())*(this->position.rx()-playersPositions[i].rx());
-                        if(distCurrent < distClosestPlayer){
-                            closestPlayer = playersPositions[i];
-                            distClosestPlayer = distCurrent;
-                        }
-                    }
+            if(hasToRecalculate()){
+                //finding closest player
+                QPoint closestPlayer = this->destinyPosition();
+
+
+                //if ther is no players
+                if(closestPlayer == QPoint(-1,-1)){
+                    this->randomNextDirection();
+                    path.clear();
+                    return;
                 }
-            }
-            //if ther is no players
-            if(closestPlayer == QPoint(-1,-1)){
-                this->randomNextDirection();
-                return;
-            }
 
-
-            //set path to closest player or spawn point
-            this->generetePathToPoint(closestPlayer);
+                //set path to closest player or spawn point
+                this->generetePathToPoint(closestPlayer);
+            }
         }else{
             this->generetePathToPoint(this->spawnPosition);
         }
@@ -120,6 +114,190 @@ void Ghost::setNextMove()
 
     }
 
+}
+
+void Ghost::setMode(unsigned int mode)
+{
+    m_mode = mode;
+}
+
+GameCharacter *Ghost::findClosestPlayer()
+{
+    GameCharacter * closestPlayer = nullptr;
+    int distClosestPlayer;
+
+    for(int i = 0 ;i<m_players.size();i++){
+        if(m_players[i]){
+            if(m_players[i]->getIsAlive()){
+                if(closestPlayer == nullptr){
+                    closestPlayer = m_players[i];
+                    distClosestPlayer = (this->position.rx()-closestPlayer->getPosition().rx())*(this->position.rx()-closestPlayer->getPosition().rx());
+                    distClosestPlayer += (this->position.ry()-closestPlayer->getPosition().ry())*(this->position.ry()-closestPlayer->getPosition().ry());
+                }else{
+                    int distCurrent = (this->position.rx()-m_players[i]->getPosition().rx())*(this->position.rx()-m_players[i]->getPosition().rx());
+                    if(distCurrent < distClosestPlayer){
+                        closestPlayer = m_players[i];
+                        distClosestPlayer = distCurrent;
+                    }
+                }
+            }
+        }
+    }
+    return closestPlayer;
+}
+
+QPoint Ghost::destinyPosition()
+{
+    if(m_mode >3) return QPoint(-1,-1);
+
+    //finding closest player
+
+
+    if(m_mode == 0){
+        GameCharacter * pom = findClosestPlayer();
+        if(pom){
+        return pom->getPosition();
+        }else{
+            return QPoint(-1,-1);
+        }
+    }
+    if(m_mode == 1){
+        GameCharacter * pom = findClosestPlayer();
+        if(pom==nullptr){
+            return QPoint(-1,-1);
+        }else{
+            if(pom->getDirection()==0){
+                return pom->getPosition();
+            }
+            int XAdd=0,YAdd=0;
+            if(pom->getDirection()==1)YAdd = -1;
+            if(pom->getDirection()==2)XAdd = 1;
+            if(pom->getDirection()==3)YAdd = 1;
+            if(pom->getDirection()==4)XAdd = -1;
+
+
+            QPoint destination = pom->getPosition();
+
+            while(map->getObstacleMap(map->fixedPoint(destination).ry(),map->fixedPoint(destination).rx())!=1){
+                destination.rx()+=XAdd;
+                destination.ry()+=YAdd;
+
+                if(destination.x()<0 || destination.x()>= map->getMapSizeX() ||destination.y()<0 || destination.y()>= map->getMapSizeY() ){
+                    if(map->getObstacleMap(map->fixedPoint(destination).ry(),map->fixedPoint(destination).rx())==1){
+                        break;
+                    }
+                }
+                if(hasToRecalculate(map->fixedPoint(destination))){
+
+                    return map->fixedPoint(destination);
+                }
+
+            }
+            destination.rx() -=XAdd;
+            destination.ry() -= YAdd;
+            return map->fixedPoint(destination);
+
+
+        }
+    }
+    if(m_mode == 2){
+        return QPoint(-1,-1);
+
+    }
+    if(m_mode == 3){
+
+    }
+
+}
+
+bool Ghost::hasToRecalculate()
+{
+    if(this->path.size()==0)return true;
+    bool isXWay = 0,isYWay =0;
+    int howManyWays = 0;
+
+    QPoint pom=position;
+    pom.setX(pom.rx()-1);
+    pom = map->fixedPoint(pom);
+    if(map->getObstacleMap(pom.ry(),pom.rx())!=1){isXWay = true;howManyWays++;}
+
+    pom = position;
+    pom.setX(pom.rx()+1);
+    pom = map->fixedPoint(pom);
+    if(map->getObstacleMap(pom.ry(),pom.rx())!=1){isXWay = true;howManyWays++;}
+
+    pom = position;
+    pom.setY(pom.ry()-1);
+    pom = map->fixedPoint(pom);
+    if(map->getObstacleMap(pom.ry(),pom.rx())!=1){isYWay = true;howManyWays++;}
+
+    pom = position;
+    pom.setY(pom.ry()+1);
+    pom = map->fixedPoint(pom);
+    if(map->getObstacleMap(pom.ry(),pom.rx())!=1){isYWay = true;howManyWays++;}
+
+    if((isXWay && isYWay) || howManyWays==1)
+        return true;
+    else
+        return false;
+}
+
+bool Ghost::hasToRecalculate(QPoint point)
+{
+    bool isXWay = 0,isYWay =0;
+
+    QPoint pom=position;
+    pom.setX(pom.rx()-1);
+    pom = map->fixedPoint(pom);
+    if(map->getObstacleMap(pom.ry(),pom.rx())!=1){isXWay = true;}
+
+    pom = position;
+    pom.setX(pom.rx()+1);
+    pom = map->fixedPoint(pom);
+    if(map->getObstacleMap(pom.ry(),pom.rx())!=1){isXWay = true;}
+
+    pom = position;
+    pom.setY(pom.ry()-1);
+    pom = map->fixedPoint(pom);
+    if(map->getObstacleMap(pom.ry(),pom.rx())!=1){isYWay = true;}
+
+    pom = position;
+    pom.setY(pom.ry()+1);
+    pom = map->fixedPoint(pom);
+    if(map->getObstacleMap(pom.ry(),pom.rx())!=1){isYWay = true;}
+
+    if((isXWay && isYWay)|| howManyWays()==1)
+        return true;
+    else
+        return false;
+}
+
+int Ghost::howManyWays()
+{
+
+    int howMany = 0;
+
+    QPoint pom=position;
+    pom.setX(pom.rx()-1);
+    pom = map->fixedPoint(pom);
+    if(map->getObstacleMap(pom.ry(),pom.rx())!=1){howMany++;}
+
+    pom = position;
+    pom.setX(pom.rx()+1);
+    pom = map->fixedPoint(pom);
+    if(map->getObstacleMap(pom.ry(),pom.rx())!=1){howMany++;}
+
+    pom = position;
+    pom.setY(pom.ry()-1);
+    pom = map->fixedPoint(pom);
+    if(map->getObstacleMap(pom.ry(),pom.rx())!=1){howMany++;}
+
+    pom = position;
+    pom.setY(pom.ry()+1);
+    pom = map->fixedPoint(pom);
+    if(map->getObstacleMap(pom.ry(),pom.rx())!=1){howMany++;}
+
+    return howMany;
 }
 
 struct Node{

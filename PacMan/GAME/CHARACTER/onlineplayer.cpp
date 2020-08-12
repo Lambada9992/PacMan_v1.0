@@ -1,24 +1,52 @@
 #include "onlineplayer.h"
 
-OnlinePlayer::OnlinePlayer(QTcpSocket *socket,Board * map,QObject *parent) : QObject(parent),Player(map)
+OnlinePlayer::OnlinePlayer(QTcpSocket *socket,Board * map,SoundManager *sound,QObject *parent) : QObject(parent),Player(map,sound)
 {
     this->socket = socket;
     isConnected = true;
     this->socketDesriptor = socket->socketDescriptor();
     connect(socket,SIGNAL(disconnected()),this,SLOT(disconnected()));
     connect(socket,SIGNAL(readyRead()),this,SLOT(readyRead()));
+
+    soundsToPlay.resize(4);
+    for(int i =0 ; i< soundsToPlay.size();i++){
+        soundsToPlay[i] = false;
+    }
 }
 
 OnlinePlayer::~OnlinePlayer()
 {
-    //socket->deleteLater();
+}
+
+void OnlinePlayer::soundPlayer(int i)
+{
+    if(i == 1) soundsToPlay[0]=true;
+    if(i == 2) soundsToPlay[1]=true;
+    if(i == 3) soundsToPlay[2]=true;
+    if(i == 4) soundsToPlay[3]=true;
 }
 
 void OnlinePlayer::message(QByteArray message)
 {
- socket->write(message);
- socket->waitForBytesWritten(2000);
- socket->flush();
+
+    if(message.contains("state")){
+        message.append("%S;");
+
+        for(int i =0; i<soundsToPlay.size();i++){
+            if(soundsToPlay[i]){
+                message.append("1;");
+                soundsToPlay[i] = false;
+            }else
+                message.append("0;");
+
+        }
+    }
+
+    if(isConnected){
+        socket->write(message);
+        socket->waitForBytesWritten(2000);
+        socket->flush();
+    }
 }
 
 qintptr OnlinePlayer::getSocketDescriptor()
@@ -33,7 +61,9 @@ bool OnlinePlayer::getIsConnected()
 
 void OnlinePlayer::readyRead()
 {
+    isConnected =true;
     QString pom = socket->readAll();
+
 
     if(pom == "w"){this->setNextDirection(1);return;}
     if(pom == "d"){this->setNextDirection(2);return;}

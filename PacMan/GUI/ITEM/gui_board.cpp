@@ -123,8 +123,8 @@ void Gui_Board::initBonus(Game &game)
         this->bonusMap[i].resize(game.playground.getMapSizeX());
     }
     //filling vector(creating objects)
-    for(int i = 0;i<game.playground.getMapSizeY();i++){
-        for(int j = 0;j<game.playground.getMapSizeX();j++){
+    for(unsigned int i = 0;i<game.playground.getMapSizeY();i++){
+        for(unsigned int j = 0;j<game.playground.getMapSizeX();j++){
             switch(game.playground.getBonusMap(i,j)){
             case 1:
                 this->bonusMap[i][j] = new MyBonus(j,i,false,this->scale,this->position,this);

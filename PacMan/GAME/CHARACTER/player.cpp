@@ -1,9 +1,11 @@
 #include "player.h"
+#include <QSoundEffect>
 
-Player::Player(Board *map) : GameCharacter(map)
+Player::Player(Board *map,SoundManager * sound) : GameCharacter(map)
 {
     this->life = 3;
     this->score = 0;
+    this->m_sound = sound;
 
 
 }
@@ -43,9 +45,11 @@ bool Player::collectBonuses()
         break;
     case 1:
         score++;
+        soundPlayer(1);
         return false;
         break;
     case 2:
+        soundPlayer(2);
         return true;
         break;
 
@@ -56,6 +60,17 @@ void Player::kill()
 {
     if(life!=0)life--;
     this->isAlive = false;
+    soundPlayer(3);
+}
+
+void Player::soundPlayer(int i)
+{
+    if(i == 1) m_sound->playCoinCollectSound();
+    if(i == 2) m_sound->playBonusCollectSound();
+    if(i == 3) m_sound->playDieSound();
+    if(i == 4) m_sound->playEatGhostSound();
+
+
 }
 
 void Player::setLife(unsigned int life)

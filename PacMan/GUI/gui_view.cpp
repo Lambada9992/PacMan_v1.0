@@ -10,7 +10,6 @@
 #include <QRegExpValidator>
 #include <QTextEdit>
 #include <QTimer>
-#include "Gui/ITEM/scoretable.h"
 
 GUI_View::GUI_View(QWidget *parent) : QGraphicsView(parent)
 {
@@ -34,6 +33,10 @@ GUI_View::GUI_View(QWidget *parent) : QGraphicsView(parent)
     connectionModeText = nullptr;
     playersOnlineText = nullptr;
     spectatorOnlineText = nullptr;
+    restartGameButton = nullptr;
+    soundButton = nullptr;
+    this->sound = &SoundManager::get();
+
 
     connect(&this->game,SIGNAL(update()),this,SLOT(updateGui()));
     connect(&this->game,SIGNAL(updateGui()),this,SLOT(updateGuiItems()));
@@ -107,7 +110,7 @@ void GUI_View::displayMainMenu()
 void GUI_View::updateScoreTable()
 {
     if(scoreTable == nullptr)return;
-    if(game.getIsLive()==false)return;
+    //if(game.getIsLive()==false)return;
     QString result = QString("SCORE TABLE:\n");
 
     for(int i=0;i<4;i++){
@@ -137,15 +140,19 @@ void GUI_View::displayGame()
     if(scene == nullptr)return;
 
     //clearing
-    scene->clear();clearItems();
+    scene->clear();
+    clearItems();
 
     this->setBackgroundBrush(QBrush(Qt::darkGray,Qt::SolidPattern));
 
+    this->sound->playBeginningSound();
+
+    //game board
     board = new Gui_Board(50,50,25,this->game);
     board->setFlag(QGraphicsItem::ItemIsFocusable);
     board->setFocus();
-
     connect(this,SIGNAL(updateCharacters(Game *)),board,SLOT(updateCharacters(Game *)));
+    //board->setFocus();
     scene->addItem(board);
 
     //score table
@@ -156,6 +163,15 @@ void GUI_View::displayGame()
     int y = 100;
     scoreTable->setPos(x,y);
     scene->addItem(scoreTable);
+
+    //sound button
+    soundButton = new MyButton(sound->getText());
+    x = (this->width()/2 - soundButton->boundingRect().width()/2)*2 - 40;
+    y = 600;
+    soundButton->setPos(x,y);
+    connect(soundButton,SIGNAL(clicked()),this,SLOT(soundButtonClicked()));
+    scene->addItem(soundButton);
+
 
     //main menu button
     MyButton *mainMenuButton = new MyButton(QString("Main Menu"));
@@ -174,7 +190,7 @@ void GUI_View::singleplayerButtonClicked()
     game.setMode(1);
     displayGame();
 
-    QTimer::singleShot(1000,&game,SLOT(start()));
+    QTimer::singleShot(4000,&game,SLOT(start()));
 
 }
 
@@ -217,12 +233,14 @@ void GUI_View::quitButtonClicked()
 
 void GUI_View::mainMenuButtonClicked()
 {
+    game.stop();
+    game.setMode(0);
     this->displayMainMenu();
 }
 
 void GUI_View::restartButtonClicked()
 {
-    game.restart();
+    game.restartGame();
     restartGameButton = nullptr;
 }
 
@@ -356,14 +374,23 @@ void GUI_View::startGameButtonClicked()
     game.setIsLiveAlready();
     game.sendInitState();
     this->displayGame();
-    QTimer::singleShot(2000,&game,SLOT(start()));
+    QTimer::singleShot(4500,&game,SLOT(start()));
+}
+
+void GUI_View::soundButtonClicked()
+{
+    sound->setIsMuted(!sound->getIsMuted());
+    if(soundButton){
+        soundButton->setText(sound->getText());
+    }
 }
 
 void GUI_View::updateGui()
 {
     emit updateCharacters(&game);
-    if(scoreTable)updateScoreTable();
-    //
+    if(scoreTable){
+        updateScoreTable();
+    }
 
 }
 
@@ -407,11 +434,10 @@ void GUI_View::updateGuiItems()
 
     if(game.ended() && game.getMode()!=0 && game.getMode()!=3){
         if(this->restartGameButton==nullptr){
-
             //restart button add
             restartGameButton = new MyButton(QString("Restart"));
             int x = (this->width()/2 - restartGameButton->boundingRect().width()/2)*2 - 40;
-            int y = 600;
+            int y = 500;
             restartGameButton->setPos(x,y);
             connect(restartGameButton,SIGNAL(clicked()),this,SLOT(restartButtonClicked()));
             scene->addItem(restartGameButton);
@@ -430,5 +456,7 @@ void GUI_View::clearItems()
     connectionModeText = nullptr;
     playersOnlineText = nullptr;
     spectatorOnlineText = nullptr;
+    restartGameButton = nullptr;
+    soundButton = nullptr;
 }
 

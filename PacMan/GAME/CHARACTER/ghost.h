@@ -11,9 +11,11 @@ class Ghost : public GameCharacter
 
 public:
     static bool isFeared;
+protected:
+    static QVector<GameCharacter *> m_players;
 private:
-    QVector<QPoint> playersPositions;
     QVector <int> path;
+    unsigned int m_mode;
 
 public:
     Ghost(Board *map);
@@ -23,10 +25,17 @@ public:
 
     void kill();
     void randomNextDirection();
-    void setPlayersPositions(const QVector<Player *>& players);
+    static void setPlayersPositions(const QVector<Player *>& players);
     void setNextMove();
 
+    void setMode(unsigned int mode);
+    GameCharacter * findClosestPlayer();
+    QPoint destinyPosition();
+
 private:
+    bool hasToRecalculate();
+    bool hasToRecalculate(QPoint point);
+    int howManyWays();
     void generetePathToPoint(QPoint destination);
 
 

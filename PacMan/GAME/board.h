@@ -39,6 +39,8 @@ public://getery i setery
     QPoint getSpawnPoint(unsigned int index);
     bool isAllBonusCollected();
 
+    QPoint fixedPoint(const QPoint &point);
+
 };
 
 #endif // BOARD_H

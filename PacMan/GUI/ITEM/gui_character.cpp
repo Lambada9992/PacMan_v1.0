@@ -3,10 +3,10 @@
 
 Gui_Character::Gui_Character(GameCharacter *character,QVector<QVector<QPixmap>> images,unsigned int scale,int timerInterval,QPointF boardPosition,QGraphicsItem *parent,QObject *pom) : QObject(pom), QGraphicsPixmapItem(parent)
 {
-    character->imageState();
     this->boardPosition = boardPosition;
     this->scale = scale;
-    this->extrapixel = scale/3;
+    //this->extrapixel = scale/3;
+    this->extrapixel = scale;
     this->images = images;
     this->character = character;
     this->lastIsAliveStatus = character->getIsAlive();
@@ -15,8 +15,8 @@ Gui_Character::Gui_Character(GameCharacter *character,QVector<QVector<QPixmap>> 
     this->timerInterval = timerInterval;
     this->animation = new QPropertyAnimation(this,"pos");
     this->isMoving = false;
-    this->animation->setDuration(this->timerInterval-this->timerInterval/5);
-
+    //this->animation->setDuration(this->timerInterval-this->timerInterval/5);
+    this->animation->setDuration(0);
 
     for(int i=0;i<this->images.size();i++){
         for(int j = 0; j < this->images[i].size();j++){
@@ -81,14 +81,12 @@ void Gui_Character::onTick()
     if(increaseImageIndex){
         nextImageIndex = ++this->currentImage;
         if(nextImageIndex == images[character->imageState()].size()-1)
-        //if(nextImageIndex == images[0].size()-1)
             increaseImageIndex = false;
     }else{
         nextImageIndex = --this->currentImage;
         if(nextImageIndex == 0)increaseImageIndex = true;
     }
     this->setPixmap(this->images[character->imageState()][nextImageIndex]);
-    //this->setPixmap(this->images[0][nextImageIndex]);
     this->currentImage = nextImageIndex;
 
 }

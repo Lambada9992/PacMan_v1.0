@@ -38,7 +38,6 @@ public:
     void  updatePosition();
     QPoint getCharacterPosition();
     bool isCollectingCoins(){return CollectingCoins;}
-    qint64 getSocketDescriptor();
 
 public slots:
     void onTick();

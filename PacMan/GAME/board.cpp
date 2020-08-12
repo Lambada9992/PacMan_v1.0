@@ -171,3 +171,14 @@ bool Board::isAllBonusCollected()
     }
 
 }
+
+QPoint Board::fixedPoint(const QPoint &point)
+{
+    QPoint result = point;
+    if(point.x()<0)result.setX(getMapSizeX()-1);
+    if(point.y()<0)result.setY(getMapSizeY()-1);
+    if(point.x()>=getMapSizeX())result.setX(0);
+    if(point.y()>=getMapSizeY())result.setY(0);
+
+    return result;
+}

@@ -6,6 +6,7 @@
 #include "GAME/game.h"
 #include <QLineEdit>
 #include "GUI/ITEM/mybutton.h"
+#include "GAME/soundmanager.h"
 
 
 class GUI_View : public QGraphicsView
@@ -16,12 +17,15 @@ class GUI_View : public QGraphicsView
 private:
     QGraphicsScene *scene;
     Game game;
+    SoundManager *sound;
     Gui_Board *board;
     QGraphicsTextItem *scoreTable;
     QGraphicsTextItem *connectStatusText,*connectionModeText;
     QGraphicsTextItem *playersOnlineText,*spectatorOnlineText;
     QLineEdit *lineEditBox;
     MyButton *restartGameButton;
+    MyButton *soundButton;
+
 
 
 
@@ -49,6 +53,7 @@ public slots:
     void connetButtonClicked();
     void playerSpectatorButtonClicked();
     void startGameButtonClicked();
+    void soundButtonClicked();
 
 
     void updateGui();

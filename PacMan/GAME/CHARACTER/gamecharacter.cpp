@@ -9,6 +9,7 @@ GameCharacter::GameCharacter(Board *map)
     this->spawnPosition.setX(0);
     this->spawnPosition.setY(0);
 
+    this->direction = 0;
     this->nextDirection = 0;
     this->isAlive = true;
     this->map = map;

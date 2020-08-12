@@ -11,7 +11,7 @@ class MyPlayer : public Player{
 
     //METHODS
 public:
-    MyPlayer(Board *map);
+    MyPlayer(Board *map,SoundManager *sound);
 
 
 
