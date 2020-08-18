@@ -7,7 +7,7 @@
 MyButton::MyButton(QString text,QGraphicsItem *parent) : QGraphicsRectItem(parent)
 {
     // position, size, theme
-    setRect(0,0,200,50);
+    setRect(0,0,120,30);
     QBrush brush;
     brush.setStyle(Qt::SolidPattern);
     brush.setColor(Qt::darkCyan);
@@ -15,7 +15,7 @@ MyButton::MyButton(QString text,QGraphicsItem *parent) : QGraphicsRectItem(paren
 
     this->text = new QGraphicsTextItem(text,this);
 
-    QFont font("comic sans",15);
+    QFont font("comic sans",10);
     this->text->setFont(font);
 
     int x = rect().width()/2 - this->text->boundingRect().width()/2;
@@ -55,7 +55,7 @@ void MyButton::setText(QString text)
     delete this->text;
     this->text = new QGraphicsTextItem(text,this);
 
-    QFont font("comic sans",15);
+    QFont font("comic sans",10);
     this->text->setFont(font);
 
     int x = rect().width()/2 - this->text->boundingRect().width()/2;

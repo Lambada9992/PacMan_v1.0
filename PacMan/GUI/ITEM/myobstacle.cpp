@@ -8,7 +8,7 @@ MyObstacle::MyObstacle(unsigned int x,unsigned int y,QVector<int> neighbours,uns
 {
 
     //double extraSpace = 4;
-    double extraSpace = scale/15.0;
+    double extraSpace = scale/double(scale-4);
     setPen(Qt::NoPen);
 
     QBrush brush;

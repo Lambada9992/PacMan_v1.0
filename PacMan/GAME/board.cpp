@@ -147,6 +147,16 @@ void Board::resizeMap(unsigned int y,unsigned int x)
 
 }
 
+unsigned int Board::getMapSizeY(){return mapSizeY;}
+
+unsigned int Board::getMapSizeX(){return mapSizeX;}
+
+unsigned int Board::getMapIndex(){return mapIndex;}
+
+unsigned int Board::getObstacleMap(unsigned int i, unsigned int j){return obstacleMap[i][j];}
+
+unsigned int Board::getBonusMap(unsigned int i, unsigned int j){return bonusMap[i][j];}
+
 unsigned int Board::collectBonus(unsigned int i, unsigned int j)
 {
     unsigned int result = this->bonusMap[i][j];

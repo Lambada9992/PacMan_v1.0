@@ -6,17 +6,14 @@ Gui_Character::Gui_Character(GameCharacter *character,QVector<QVector<QPixmap>> 
     this->boardPosition = boardPosition;
     this->scale = scale;
     //this->extrapixel = scale/3;
-    this->extrapixel = scale;
+    this->extrapixel = scale*(10/9.0);
     this->images = images;
     this->character = character;
     this->lastIsAliveStatus = character->getIsAlive();
     this->currentImage = 0;
     this->increaseImageIndex = true;
     this->timerInterval = timerInterval;
-    this->animation = new QPropertyAnimation(this,"pos");
     this->isMoving = false;
-    //this->animation->setDuration(this->timerInterval-this->timerInterval/5);
-    this->animation->setDuration(0);
 
     for(int i=0;i<this->images.size();i++){
         for(int j = 0; j < this->images[i].size();j++){
@@ -42,7 +39,7 @@ Gui_Character::Gui_Character(GameCharacter *character,QVector<QVector<QPixmap>> 
 
 Gui_Character::~Gui_Character()
 {
-    delete animation;
+
 }
 
 void Gui_Character::updatePosition()
@@ -56,13 +53,8 @@ void Gui_Character::updatePosition()
     }
 
 
-    if(((this->pos().rx()-nextPosition.rx())*(this->pos().rx()-nextPosition.rx())) + ((this->pos().ry()-nextPosition.ry())*(this->pos().ry()-nextPosition.ry())) < scale*scale*4){
-        this->animation->setStartValue(this->pos());
-        this->animation->setEndValue(nextPosition);
-        animation->start();
-    }else{
-        setPos(nextPosition);
-    }
+    setPos(nextPosition);
+
 }
 
 QPoint Gui_Character::getCharacterPosition()

@@ -15,6 +15,7 @@ class GUI_View : public QGraphicsView
 
     //VAR
 private:
+    unsigned int m_scale;
     QGraphicsScene *scene;
     Game game;
     SoundManager *sound;
@@ -47,6 +48,7 @@ public slots:
     void quitButtonClicked();
     void mainMenuButtonClicked();
     void restartButtonClicked();
+
 
     void hostButtonClicked();
     void joinButtonClicked();

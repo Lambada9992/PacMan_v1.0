@@ -3,11 +3,17 @@
 #include "GAME/CHARACTER/mybucket.h"
 #include "GAME/CHARACTER/mybucket.cpp"
 
+//static var init
 bool Ghost::isFeared = false;
 QVector<GameCharacter *> Ghost::m_players;
 
+bool Ghost::chaseMode = false;
+int Ghost::chaseModeTicks = 12;
+int Ghost::notChaseModeTicks = 12;
+
 Ghost::Ghost(Board *map) : GameCharacter(map),
-    m_mode(2)
+    m_mode(0),
+    m_pathType(0)
 {
     //init players position
     m_players.resize(4);
@@ -82,36 +88,39 @@ void Ghost::setNextMove()
         this->resurect();
     }
 
-    if(Ghost::isFeared && (this->getIsAlive()==true)){
-        this->randomNextDirection();
-    }else{
-        if(this->getIsAlive()==true){
-
-            if(hasToRecalculate()){
-                //finding closest player
-                QPoint closestPlayer = this->destinyPosition();
-
-
-                //if ther is no players
-                if(closestPlayer == QPoint(-1,-1)){
-                    this->randomNextDirection();
-                    path.clear();
-                    return;
+    if(Ghost::isFeared && this->getIsAlive()){
+        // zywy i wystraszony
+        if(path.size()==0 || m_pathType!=2){
+            this->generetePathToPoint(randomPoint());
+            if(path.size()!=0)m_pathType = 2;
+        }
+    }else if(this->getIsAlive()){
+        //zywy nie wystraszony
+        if(Ghost::getChaseMode()){
+            if(path.size()==0 || m_pathType!=1){
+                QPoint destiny = destinyPosition();
+                if(destiny!=QPoint(-1,-1)){
+                    this->generetePathToPoint(destiny);
+                    if(path.size()!=0)m_pathType = 1;
                 }
-
-                //set path to closest player or spawn point
-                this->generetePathToPoint(closestPlayer);
             }
         }else{
-            this->generetePathToPoint(this->spawnPosition);
+            if(path.size()==0 || m_pathType!=2){
+                this->generetePathToPoint(randomPoint());
+                if(path.size()!=0)m_pathType = 2;
+            }
         }
-
-        if(path.size()!=0){
-            this->nextDirection = path[0];
-            path.pop_front();
+    }else{
+        //martwy
+        if(path.size()==0 || m_pathType != 3){
+            this->generetePathToPoint(spawnPosition);
+            if(path.size()!=0)m_pathType=3;
         }
+    }
 
-
+    if(path.size()!=0){
+        nextDirection = path[0];
+        path.pop_front();
     }
 
 }
@@ -146,17 +155,52 @@ GameCharacter *Ghost::findClosestPlayer()
     return closestPlayer;
 }
 
+GameCharacter *Ghost::findFarestPlayer()
+{
+    GameCharacter * Player = nullptr;
+    int distClosestPlayer;
+
+    for(int i = 0 ;i<m_players.size();i++){
+        if(m_players[i]){
+            if(m_players[i]->getIsAlive()){
+                if(Player == nullptr){
+                    Player = m_players[i];
+                    distClosestPlayer = (this->position.rx()-Player->getPosition().rx())*(this->position.rx()-Player->getPosition().rx());
+                    distClosestPlayer += (this->position.ry()-Player->getPosition().ry())*(this->position.ry()-Player->getPosition().ry());
+                }else{
+                    int distCurrent = (this->position.rx()-m_players[i]->getPosition().rx())*(this->position.rx()-m_players[i]->getPosition().rx());
+                    if(distCurrent > distClosestPlayer){
+                        Player = m_players[i];
+                        distClosestPlayer = distCurrent;
+                    }
+                }
+            }
+        }
+    }
+    return Player;
+}
+
+QPoint Ghost::randomPoint()
+{
+    int x,y;
+    do{
+        x = rand()%map->getMapSizeX();
+        y = rand()%map->getMapSizeY();
+    }while(map->getObstacleMap(y,x));
+
+    QPoint result;
+    result.setX(x);
+    result.setY(y);
+
+    return result;
+}
+
 QPoint Ghost::destinyPosition()
 {
-    if(m_mode >3) return QPoint(-1,-1);
-
-    //finding closest player
-
-
     if(m_mode == 0){
         GameCharacter * pom = findClosestPlayer();
         if(pom){
-        return pom->getPosition();
+            return pom->getPosition();
         }else{
             return QPoint(-1,-1);
         }
@@ -184,20 +228,18 @@ QPoint Ghost::destinyPosition()
 
                 if(destination.x()<0 || destination.x()>= map->getMapSizeX() ||destination.y()<0 || destination.y()>= map->getMapSizeY() ){
                     if(map->getObstacleMap(map->fixedPoint(destination).ry(),map->fixedPoint(destination).rx())==1){
-                        break;
+                        destination.rx() -= XAdd;
+                        destination.ry() -= YAdd;
+                        return map->fixedPoint(destination);
+                    }else{
+                        return map->fixedPoint(destination);
                     }
                 }
                 if(hasToRecalculate(map->fixedPoint(destination))){
 
                     return map->fixedPoint(destination);
                 }
-
             }
-            destination.rx() -=XAdd;
-            destination.ry() -= YAdd;
-            return map->fixedPoint(destination);
-
-
         }
     }
     if(m_mode == 2){
@@ -205,14 +247,26 @@ QPoint Ghost::destinyPosition()
 
     }
     if(m_mode == 3){
-
+        GameCharacter * pom = findFarestPlayer();
+        if(pom){
+            return pom->getPosition();
+        }else{
+            return QPoint(-1,-1);
+        }
     }
+
+    if(m_mode == 4){
+        return randomPoint();
+    }
+
+    return QPoint(-1,-1);
 
 }
 
 bool Ghost::hasToRecalculate()
 {
     if(this->path.size()==0)return true;
+
     bool isXWay = 0,isYWay =0;
     int howManyWays = 0;
 
@@ -475,4 +529,41 @@ void Ghost::generetePathToPoint(QPoint destination)
 
 
 
+}
+
+void Ghost::DefaultChaseModeTicks()
+{
+    chaseMode = false;
+    chaseModeTicks = 24;
+    notChaseModeTicks = 24;
+
+}
+
+void Ghost::setChaseMode(bool mode)
+{
+    chaseMode = mode;
+}
+
+bool Ghost::getChaseMode()
+{
+    return chaseMode;
+}
+
+int Ghost::getChaseModeTicks()
+{
+    return chaseModeTicks;
+}
+
+int Ghost::getNotChaseModeTicks()
+{
+    return notChaseModeTicks;
+}
+
+void Ghost::nextChaseModeTicks()
+{
+    if(notChaseModeTicks>0)
+        notChaseModeTicks-=2;
+
+    if(notChaseModeTicks<0)
+        notChaseModeTicks = 0;
 }

@@ -1,10 +1,11 @@
 #include "soundmanager.h"
 
 
-SoundManager::SoundManager(QObject * parent) : QObject(parent),
+SoundManager::SoundManager() :
     m_isMuted(false)
 {
     this->m_coinCollectSound.setSource(QUrl("qrc:/sounds/sounds/CoinSound.wav"));
+
     this->m_bonusCollectSound.setSource(QUrl("qrc:/sounds/sounds/BonusSound.wav"));
     this->m_dieSound.setSource(QUrl("qrc:/sounds/sounds/DieSound.wav"));
     this->m_eatGhostSound.setSource(QUrl("qrc:/sounds/sounds/EatGhostSound.wav"));
@@ -13,10 +14,16 @@ SoundManager::SoundManager(QObject * parent) : QObject(parent),
     this->m_gameSound.setSource(QUrl("qrc:/sounds/sounds/GameSound.wav"));
     this->m_gameSound.setLoopCount(QSoundEffect::Infinite);
 
-    //this->m_mainMenuSound.setSource(QUrl("qrc:/sounds/"));
-    //this->m_mainMenuSound.setLoopCount(QSoundEffect::Infinite);
+    this->m_mainMenuSound.setSource(QUrl("qrc:/sounds/sounds/MainMenuSound.wav"));
+    this->m_mainMenuSound.setLoopCount(QSoundEffect::Infinite);
 
-    //this->setIsMuted(true);
+    this->m_coinCollectSound.setVolume(0.05);
+    this->m_bonusCollectSound.setVolume(0.05);
+    this->m_dieSound.setVolume(0.05);
+    this->m_eatGhostSound.setVolume(0.05);
+    this->m_beginningSound.setVolume(0.3);
+    this->m_gameSound.setVolume(0.3);
+    this->m_mainMenuSound.setVolume(0.05);
 }
 
 SoundManager::~SoundManager()
@@ -62,12 +69,12 @@ void SoundManager::playBeginningSound()
 void SoundManager::playMainMenuSound(bool var)
 {
 
-
-
     if(var){
-        //m_mainMenuSound.play();
+        if(!m_mainMenuSound.isPlaying())
+            m_mainMenuSound.play();
     }else{
-        //m_mainMenuSound.stop();
+        if(m_mainMenuSound.isPlaying())
+            m_mainMenuSound.stop();
     }
 
 }
@@ -77,9 +84,11 @@ void SoundManager::playGameSound(bool var)
 
 
     if(var){
-        m_gameSound.play();
+        if(!m_gameSound.isPlaying())
+            m_gameSound.play();
     }else{
-        m_gameSound.stop();
+        if(m_gameSound.isPlaying())
+            m_gameSound.stop();
     }
 
 }
@@ -110,54 +119,3 @@ QString SoundManager::getText()
         return QString("Sound: on");
 }
 
-//void SoundManager::soundManagerInterface(SoundManager::Sounds type, bool on)
-//{
-//    if(type == SoundManager::CoinCollect){
-//        this->playCoinCollectSound();
-//    }
-//    if(type == SoundManager::BonusCollect){
-//        this->playBonsuCollectSound();
-//    }
-//    if(type == SoundManager::Die){
-//        this->playDieSound();
-//    }
-//    if(type == SoundManager::Beginning){
-//        this->playBeginningSound();
-//    }
-//    if(type == SoundManager::EatGhost){
-//        this->playEatGhostSound();
-//    }
-//    if(type == SoundManager::Game){
-//        this->playGameSound(on);
-//    }
-//    if(type == SoundManager::MainMenu){
-//        this->playMainMenuSound(on);
-//    }
-//}
-
-
-void SoundManager::soundManagerInterface(int type, bool on)
-{
-    if(type == 1){
-
-        this->playCoinCollectSound();
-    }
-    if(type == 2){
-        this->playBonusCollectSound();
-    }
-    if(type == 3){
-        this->playDieSound();
-    }
-    if(type == 4){
-        this->playBeginningSound();
-    }
-    if(type == 5){
-        this->playEatGhostSound();
-    }
-    if(type == 6){
-        this->playGameSound(on);
-    }
-    if(type == 7){
-        this->playMainMenuSound(on);
-    }
-}

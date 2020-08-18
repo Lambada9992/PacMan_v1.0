@@ -138,5 +138,6 @@
         <file>sounds/EatGhostSound.wav</file>
         <file>sounds/GameSound.wav</file>
         <file>sounds/BonusSound.wav</file>
+        <file>sounds/MainMenuSound.wav</file>
     </qresource>
 </RCC>

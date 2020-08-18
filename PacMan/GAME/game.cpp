@@ -58,11 +58,13 @@ void Game::setMode(unsigned int mode)
         ghosts[1]->setMode(1);
         ghosts[1]->setSpawnPosition(playground.getSpawnPoint(4+1));
         ghosts[2]= new Ghost(&playground);
-        ghosts[2]->setMode(2);
+        ghosts[2]->setMode(4);
         ghosts[2]->setSpawnPosition(playground.getSpawnPoint(4+2));
         ghosts[3]= new Ghost(&playground);
-        ghosts[3]->setMode(2);
+        ghosts[3]->setMode(4);
         ghosts[3]->setSpawnPosition(playground.getSpawnPoint(4+3));
+        Ghost::setChaseMode(false);
+        Ghost::DefaultChaseModeTicks();
 
 
 
@@ -91,12 +93,18 @@ void Game::setMode(unsigned int mode)
 
         ghosts[0]= new Ghost(&playground);
         ghosts[0]->setSpawnPosition(playground.getSpawnPoint(4+0));
+        ghosts[0]->setMode(0);
         ghosts[1]= new Ghost(&playground);
         ghosts[1]->setSpawnPosition(playground.getSpawnPoint(4+1));
+        ghosts[1]->setMode(1);
         ghosts[2]= new Ghost(&playground);
         ghosts[2]->setSpawnPosition(playground.getSpawnPoint(4+2));
+        ghosts[2]->setMode(3);
         ghosts[3]= new Ghost(&playground);
         ghosts[3]->setSpawnPosition(playground.getSpawnPoint(4+3));
+        ghosts[3]->setMode(4);
+        Ghost::setChaseMode(false);
+        Ghost::DefaultChaseModeTicks();
 
         break;
     case 3:
@@ -249,6 +257,8 @@ void Game::restartGame()
     }
     //reset ghosts
     Ghost::isFeared = false;
+    Ghost::setChaseMode(false);
+    Ghost::DefaultChaseModeTicks();
     for(int i =0;i<ghosts.size();i++){
         if(ghosts[i]){
             ghosts[i]->goSpawn();
@@ -282,14 +292,31 @@ void Game::makeMoves()
 
     this->colisions();
 
+
+
     for(int i =0;i<ghosts.size();i++){
         if(ghosts[i]!=nullptr){
             ghosts[i]->setNextMove();
             ghosts[i]->move();
         }
     }
-
     this->colisions();
+
+
+    //    static bool pom = false;
+
+    //    if(pom){
+    //        for(int i =0;i<ghosts.size();i++){
+    //            if(ghosts[i]!=nullptr){
+    //                ghosts[i]->setNextMove();
+    //                ghosts[i]->move();
+    //            }
+    //        }
+    //        this->colisions();
+    //        pom = false;
+    //    }else{
+    //        pom = true;
+    //    }
 
 }
 
@@ -388,6 +415,44 @@ void Game::resetLevel()
     }
 
     Ghost::isFeared = false;
+    Ghost::setChaseMode(false);
+}
+
+void Game::nextLevel()
+{
+    stop();
+    playground.setMap(playground.getMapIndex());
+
+    //reset players
+    for(int i =0;i<players.size();i++){
+        if(players[i]){
+            players[i]->goSpawn();
+            players[i]->setDirection(0);
+            players[i]->setNextDirection(0);
+            if(!players[i]->getIsAlive()){
+                if(players[i]->getLife()>0)
+                    players[i]->resurect();
+            }
+        }
+    }
+    //reset ghosts
+    Ghost::isFeared = false;
+    Ghost::nextChaseModeTicks();
+    Ghost::setChaseMode(false);
+    for(int i =0;i<ghosts.size();i++){
+        if(ghosts[i]){
+            ghosts[i]->goSpawn();
+            ghosts[i]->resurect();
+            ghosts[i]->setDirection(0);
+            ghosts[i]->setNextDirection(0);
+        }
+    }
+
+    if(this->mode == 2)this->sendInitState();
+
+    emit hostStartedGame();
+
+    QTimer::singleShot(4000,this,SLOT(start()));
 }
 
 
@@ -654,18 +719,11 @@ void Game::sendStatePacket()
 
 void Game::onTick()
 {
-
-    makeMoves();
-    if(mode==2){sendStatePacket();}
-    emit update();
-
     if(playground.isAllBonusCollected()){
-        this->stop();
-        //go to next level
+        nextLevel();
         emit update();
         emit updateGui();
-
-
+        return;
     }
 
     static QTimer singleShot(this);
@@ -682,7 +740,29 @@ void Game::onTick()
             emit update();
             emit updateGui();
         }
+        return;
     }
+
+    static int chaseModeTick = 0;
+    if(Ghost::getChaseMode()){
+        if(chaseModeTick<Ghost::getChaseModeTicks()){
+            chaseModeTick++;
+        }else{
+            chaseModeTick = 0;
+            if(Ghost::getNotChaseModeTicks()>0)Ghost::setChaseMode(!Ghost::getChaseMode());
+        }
+    }else{
+        if(chaseModeTick<Ghost::getNotChaseModeTicks()){
+            chaseModeTick++;
+        }else{
+            chaseModeTick = 0;
+            Ghost::setChaseMode(!Ghost::getChaseMode());
+        }
+    }
+
+    makeMoves();
+    if(mode==2){sendStatePacket();}
+    emit update();
 
 }
 
@@ -753,7 +833,7 @@ void Game::onlinePlayerRemove(qintptr socketDescriptor)
         OnlinePlayer *pom=dynamic_cast<OnlinePlayer *>(players[i]);
         if(pom!=NULL){
             if(pom->getSocketDescriptor()==socketDescriptor){
-                    pom->message("remove accept");
+                pom->message("remove accept");
                 players[i] = nullptr;
                 emit updateGui();
                 return;
@@ -828,17 +908,15 @@ void Game::connectToHost(QString ip, qint16 port)
 void Game::readyRead()
 {
     QString pom;
-    pom = socket->readAll();
-    qDebug() << pom;
+    if(socket!=nullptr){
+        if(socket->state()==QTcpSocket::ConnectedState){
+            pom = socket->readAll();
+        }else{
+            return;
+        }
+    }
 
     if(pom.mid(0,5)=="state"){this->setStateOnline(pom);emit update();return;}
-    if(pom.mid(0,1)=="S"){
-        if(pom.mid(1,1)== "1")this->sound->playCoinCollectSound();
-        if(pom.mid(1,1)== "2")this->sound->playBonusCollectSound();
-        if(pom.mid(1,1)== "3")this->sound->playDieSound();
-        if(pom.mid(1,1)== "4")this->sound->playEatGhostSound();
-
-    }
     if(pom=="join accept"){this->isOnlineParticipant=true;emit updateGui();return;}
     if(pom=="remove accept"){this->isOnlineParticipant=false;emit updateGui();return;}
     if(pom.mid(0,4)=="init"){this->setInitStateOnline(pom);emit hostStartedGame();return;}
@@ -847,5 +925,7 @@ void Game::readyRead()
 void Game::disconnected()
 {
     this->isOnlineParticipant = false;
+    connectionState = 0;
+    emit updateGui();
 }
 

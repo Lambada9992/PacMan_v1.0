@@ -5,7 +5,6 @@
 #include <GAME/CHARACTER/gamecharacter.h>
 #include <QDebug>
 #include <QTimer>
-#include <QPropertyAnimation>
 #include <QObject>
 #include <QElapsedTimer>
 
@@ -25,7 +24,6 @@ class Gui_Character : public QObject,public QGraphicsPixmapItem
     bool increaseImageIndex;
     int timerInterval;
     QTimer timer;
-    QPropertyAnimation *animation;
     bool isMoving;
     bool CollectingCoins;
     bool lastIsAliveStatus;
