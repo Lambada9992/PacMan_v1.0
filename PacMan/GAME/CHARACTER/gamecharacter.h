@@ -46,6 +46,11 @@ protected:
 
     //METHODS
 public:
+
+    /**
+     * @brief GameCharacter Konstruktor
+     * @param map wskaznik na mape gry
+     */
     GameCharacter(Board *map);
     virtual ~GameCharacter();
 

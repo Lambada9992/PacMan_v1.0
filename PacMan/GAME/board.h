@@ -22,6 +22,9 @@ private:
 
     //METHODS
 public:
+    /**
+     * @brief Board Konstruktor
+     */
     Board();
 
 private:

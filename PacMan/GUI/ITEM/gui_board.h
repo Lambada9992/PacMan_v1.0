@@ -9,7 +9,9 @@
 #include "GUI/ITEM/mybonus.h"
 
 
-
+/**
+ * @brief The Gui_Board class klasa odpowiedzialna za wyswietlanie planszy, graczy, duszkow, monetek i bonusow
+ */
 class Gui_Board : public QObject, public QGraphicsRectItem
 {
     Q_OBJECT
@@ -25,8 +27,20 @@ private:
 
     //METHODS
 public:
+    /**
+     * @brief Gui_Board Konstruktor
+     * @param x pozycja pozioma
+     * @param y pozycja pionowa
+     * @param scale rozmiar
+     * @param game referencja na obiekt klasy Game
+     * @param parent wskaznik na rodzica
+     */
     explicit Gui_Board(int x,int y,unsigned int scale,Game &game, QGraphicsItem *parent = nullptr);
     ~Gui_Board();
+    /**
+     * @brief keyPressEvent metoda obslugujaca klawiature
+     * @param event wcisniety przycisk
+     */
     void keyPressEvent(QKeyEvent *event);
 
 private:
@@ -35,6 +49,9 @@ private:
     void initPlayersAndGhosts(Game &game);
     void loadImages();
 public slots:
+    /**
+     * @brief updateCharacters metoda aktualizujaca stan rozgrywki
+     */
     void updateCharacters(Game *);
 
 

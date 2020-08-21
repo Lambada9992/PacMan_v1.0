@@ -404,6 +404,7 @@ void Game::resetLevel()
             players[i]->resurect();
             players[i]->setNextDirection(0);
             players[i]->setDirection(0);
+            players[i]->goSpawn();
 
         }
     }

@@ -62,6 +62,8 @@ QPoint Gui_Character::getCharacterPosition()
     return this->character->getPosition();
 }
 
+bool Gui_Character::isCollectingCoins(){return CollectingCoins;}
+
 
 void Gui_Character::onTick()
 {
