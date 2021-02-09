@@ -31,11 +31,11 @@ Sound - opcja pozwalająca na włączenie/wyłączenie dźwięków gry
 
 Quit - wyłączenie aplikacji
 
-Przyciski:
-W - ruch w górę
-A - ruch w lewo
-S - ruch w dół
-D - ruch w prawo
+Przyciski:<br>
+Strzałka w górę - ruch w górę<br>
+Strzałka w lewo - ruch w lewo<br>
+Strzałka w dół - ruch w dół<br>
+Strzałka w prawo - ruch w prawo<br>
 
 ## ENG
 
@@ -63,9 +63,9 @@ Sound - turn on/off sound
 
 Quit - exit app
 
-Buttons:
-W - move up
-A - move left
-S - move down
-D - move rigth
+Buttons:<br>
+Up arrow key - move up<br>
+Left arrow key - move left<br>
+Down arrow key - move down<br>
+Right arrow key - move rigth<br>
 
